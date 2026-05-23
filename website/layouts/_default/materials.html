@@ -1,0 +1,25 @@
+{{ define "main" }}
+<article class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
+  <h1>{{ .Title }}</h1>
+  <div class="prose" style="margin: 0 0 2rem; padding: 0; max-width: none;">
+    {{ .Content }}
+  </div>
+
+  {{- range .Params.days }}
+  <details class="day-details">
+    <summary>{{ .day }} · {{ .date }} · {{ .theme }}</summary>
+    <div class="content">
+      <div class="meta">{{ .lecture }}</div>
+      <ul>
+        {{- range .activities }}
+        <li>{{ . | safeHTML }}</li>
+        {{- end }}
+      </ul>
+      {{- with .materials }}
+      <p style="margin-top: 1rem;"><a href="{{ . }}" target="_blank" rel="noopener">View materials on GitHub →</a></p>
+      {{- end }}
+    </div>
+  </details>
+  {{- end }}
+</article>
+{{ end }}

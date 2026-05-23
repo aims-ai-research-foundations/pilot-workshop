@@ -1,0 +1,104 @@
+{{ define "main" }}
+<section class="hero with-grid">
+  <div class="container">
+    <h1>{{ .Params.hero.title }}</h1>
+    <p class="subtitle">{{ .Params.hero.subtitle }}</p>
+    <div class="hero-meta">
+      <span>{{ partial "icon.html" "calendar" }}{{ .Site.Params.dates }}</span>
+      <span>{{ partial "icon.html" "map-pin" }}{{ .Site.Params.venue }}</span>
+    </div>
+    <div class="hero-grid">
+      <div class="hero-photo">
+        <img src="{{ "img/landing/aims-building.jpg" | relURL }}" alt="AIMS South Africa building façade">
+      </div>
+      <div class="hero-photo tall">
+        <img src="{{ "img/landing/students-learning.jpeg" | relURL }}" alt="Students learning at a workshop">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="intro-section fade-in">
+  <div class="container intro">
+    {{ .Content }}
+  </div>
+</section>
+
+<section class="fade-in with-glow">
+  <div class="container">
+    <p class="section-eyebrow">Your week in Muizenberg</p>
+    <h2 class="section-title with-accent">What you will do</h2>
+    <p class="section-lead">Four focus areas that shape every day of the workshop.</p>
+    <div class="threads fade-in-stagger">
+      {{- range .Params.threads }}
+      <article class="thread-card">
+        <div class="thread-icon-wrap thread-icon--{{ .color }}">{{ partial "icon.html" .icon }}</div>
+        <h3 class="thread-title">{{ .title }}</h3>
+        <p>{{ .description }}</p>
+      </article>
+      {{- end }}
+    </div>
+  </div>
+</section>
+
+<section class="fade-in with-grid">
+  <div class="container">
+    <p class="section-eyebrow">At a glance</p>
+    <h2 class="section-title with-accent">The essentials</h2>
+    <div class="quick-info fade-in-stagger">
+      <div class="info-card">
+        <div class="info-icon-wrap">{{ partial "icon.html" "calendar" }}</div>
+        <div>
+          <div class="label">Dates</div>
+          <div class="value">{{ .Site.Params.dates }}</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon-wrap">{{ partial "icon.html" "map-pin" }}</div>
+        <div>
+          <div class="label">Venue</div>
+          <div class="value">{{ .Site.Params.venue }}</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon-wrap">{{ partial "icon.html" "users" }}</div>
+        <div>
+          <div class="label">Audience</div>
+          <div class="value">{{ .Site.Params.audience }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="fade-in">
+  <div class="container">
+    <div class="pre-workshop-cta">
+      <div class="inner">
+        <p class="eyebrow">Before you arrive</p>
+        <h2>Get a head start</h2>
+        <div class="meta">{{ partial "icon.html" "calendar" }} Virtual onboarding · 18 May – 12 June 2026</div>
+        <p>Four weeks of online pre-work walk you through the AI Research Foundations curriculum so you arrive ready for the in-person week. Set up on Google Skills, complete six courses, and join the Discord and WhatsApp channels.</p>
+        {{ with .Site.GetPage "/pre-workshop" }}
+        <a class="btn btn-light" href="{{ .RelPermalink }}">View the pre-workshop steps {{ partial "icon.html" "arrow-right" }}</a>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="fade-in">
+  <div class="container">
+    <div class="cta-banner">
+      <img src="{{ "img/landing/see-you-in-muizenberg.jpg" | relURL }}" alt="See you in Muizenberg">
+      <div class="body">
+        <h2>See you in Muizenberg.</h2>
+        <p>This pilot week is your moment to learn, teach, adapt, and connect with peers shaping AI research education across the continent.</p>
+        <a class="btn" href="{{ .Site.Params.welcomeKitURL }}" target="_blank" rel="noopener">Download the Welcome Kit {{ partial "icon.html" "external-link" }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{ partial "partners.html" . }}
+{{ end }}

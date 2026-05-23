@@ -1,0 +1,21 @@
+<section class="partners-band">
+  <div class="container">
+    <p class="label">In partnership with</p>
+    <div class="partners-row">
+      {{- range where .Site.Params.partners "group" "partner" }}
+      <a class="logo" href="{{ .url }}" target="_blank" rel="noopener" title="{{ .name }}">
+        <img src="{{ .image | relURL }}" alt="{{ .name }}" loading="lazy">
+      </a>
+      {{- end }}
+    </div>
+
+    <p class="label" style="margin-top: 2.5rem;">With support from</p>
+    <div class="partners-row partners-row--single">
+      {{- range where .Site.Params.partners "group" "supporter" }}
+      <a class="logo" href="{{ .url }}" target="_blank" rel="noopener" title="{{ .name }}">
+        <img src="{{ .image | relURL }}" alt="{{ .name }}" loading="lazy">
+      </a>
+      {{- end }}
+    </div>
+  </div>
+</section>

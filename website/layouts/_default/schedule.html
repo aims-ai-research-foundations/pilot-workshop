@@ -1,0 +1,65 @@
+{{ define "main" }}
+<article class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
+  <h1>{{ .Title }}</h1>
+  <div class="prose" style="margin: 0 0 1rem; padding: 0; max-width: none;">
+    {{ .Content }}
+  </div>
+
+  <h2 style="margin-top: 2rem;">Daily themes</h2>
+  <div class="theme-cards fade-in-stagger">
+    {{- range .Params.themes }}
+    <div class="theme-card" data-theme="{{ .slug }}">
+      <div class="day">{{ .day }} · {{ .date }}</div>
+      <h3 class="name">{{ .name }}</h3>
+    </div>
+    {{- end }}
+  </div>
+
+  <h2 style="margin-top: 2.5rem;">At a glance</h2>
+
+  <div class="legend">
+    {{- range .Params.legend }}
+    <span class="legend-item"><span class="legend-swatch swatch-{{ .cat }}"></span>{{ .label }}</span>
+    {{- end }}
+  </div>
+
+  <table class="schedule-grid">
+    <thead>
+      <tr>
+        <th>Time</th>
+        {{- range .Params.themes }}
+        <th>{{ .day }}<br><small style="font-weight:400; opacity:0.8;">{{ .date }}</small></th>
+        {{- end }}
+      </tr>
+    </thead>
+    <tbody>
+      {{- range .Params.grid }}
+      <tr>
+        <td class="time">{{ .time }}</td>
+        {{- if .break }}
+        <td class="cell-break" colspan="5">{{ .break }}</td>
+        {{- else }}
+        {{- range .cells }}
+        <td class="cell-{{ .cat }}">{{ .text | safeHTML }}</td>
+        {{- end }}
+        {{- end }}
+      </tr>
+      {{- end }}
+    </tbody>
+  </table>
+
+  <div class="day-cards">
+    {{- range .Params.themes }}
+    <article class="day-card" data-theme="{{ .slug }}">
+      <h3>{{ .day }} · {{ .name }}</h3>
+      <div class="meta">{{ .date }}</div>
+      <ul>
+        {{- range .sessions }}
+        <li>{{ . | safeHTML }}</li>
+        {{- end }}
+      </ul>
+    </article>
+    {{- end }}
+  </div>
+</article>
+{{ end }}

@@ -1,0 +1,13 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{- $pageTitle := .Site.Title }}
+{{- if not .IsHome }}{{ $pageTitle = printf "%s · %s" .Title .Site.Title }}{{ end }}
+<title>{{ $pageTitle }}</title>
+<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+
+<meta property="og:title" content="{{ $pageTitle }}">
+<meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
+<meta property="og:type" content="website">
+<meta property="og:image" content="{{ "img/landing/aims-building.jpg" | absURL }}">
+
+<link rel="stylesheet" href="{{ "css/main.css" | relURL }}">

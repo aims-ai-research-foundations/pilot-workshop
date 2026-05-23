@@ -1,0 +1,40 @@
+{{ define "main" }}
+<article class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
+  <h1>{{ .Title }}</h1>
+  <div class="prose" style="margin: 0 0 1rem; padding: 0; max-width: none;">
+    {{ .Content }}
+  </div>
+
+  <h2 style="margin-top: 2rem;">Pre-arrival checklist</h2>
+  <p style="color: var(--text-muted); margin-bottom: 1rem;">Complete by {{ .Params.deadline }}.</p>
+  <div class="checklist">
+    {{- range .Params.preArrival }}
+    <div class="item">
+      <div class="box" aria-hidden="true"></div>
+      <span>{{ . | safeHTML }}</span>
+    </div>
+    {{- end }}
+  </div>
+
+  <h2 style="margin-top: 2.5rem;">What to bring & what we provide</h2>
+  <div class="bring-provide">
+    <div class="bp-card">
+      <h3>What to bring</h3>
+      <ul>
+        {{- range .Params.bring }}<li>{{ . }}</li>{{- end }}
+      </ul>
+    </div>
+    <div class="bp-card">
+      <h3>What we provide</h3>
+      <ul>
+        {{- range .Params.provide }}<li>{{ . }}</li>{{- end }}
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout">
+    <h3>Dietary or accessibility needs?</h3>
+    <p>Email <a href="mailto:{{ .Site.Params.contactEmail }}">{{ .Site.Params.contactEmail }}</a> and we'll sort it out.</p>
+  </div>
+</article>
+{{ end }}

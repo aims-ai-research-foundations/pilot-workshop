@@ -1,0 +1,84 @@
+baseURL = 'https://aims-ai-research-foundations.github.io/pilot-workshop/'
+title = 'AIMS AI Research Foundations Pilot Workshop'
+defaultContentLanguage = 'en'
+
+[languages.en]
+  locale = 'en-gb'
+  weight = 1
+
+[taxonomies]
+  # disable default tag/category taxonomies
+
+[params]
+  description = "AIMS Train-the-Trainer Programme pilot workshop on AI Research Foundations for Higher Education. 15–19 June 2026, Muizenberg, Cape Town."
+  dates = "15 – 19 June 2026"
+  venue = "AIMS South Africa, Muizenberg, Cape Town"
+  audience = "PhD / Master's students, researchers, TAs, lecturers"
+  contactEmail = "ai-research-foundations@aims.ac.za"
+  repoURL = "https://github.com/aims-ai-research-foundations/pilot-workshop"
+  welcomeKitURL = "https://aims.ac.za"
+  communicationPackURL = "https://aims.ac.za"
+  googleSkillsURL = "https://skills.google/paths/3135"
+  aimsURL = "https://aims.ac.za"
+
+[[params.partners]]
+  name = "AIMS South Africa"
+  image = "img/logos/aims-south-africa.png"
+  url = "https://aims.ac.za"
+  group = "partner"
+
+[[params.partners]]
+  name = "University College London"
+  image = "img/logos/ucl.jpeg"
+  url = "https://www.ucl.ac.uk"
+  group = "partner"
+
+[[params.partners]]
+  name = "FATE Foundation"
+  image = "img/logos/fate-foundation.png"
+  url = "https://fatefoundation.org"
+  group = "partner"
+
+[[params.partners]]
+  name = "Google.org"
+  image = "img/logos/google-org.png"
+  url = "https://www.google.org"
+  group = "supporter"
+
+[[menu.main]]
+  name = "About"
+  pageRef = "/about"
+  weight = 10
+
+[[menu.main]]
+  name = "Team"
+  pageRef = "/team"
+  weight = 20
+
+[[menu.main]]
+  name = "Pre-Workshop"
+  pageRef = "/pre-workshop"
+  weight = 30
+
+[[menu.main]]
+  name = "Checklist"
+  pageRef = "/checklist"
+  weight = 35
+
+[[menu.main]]
+  name = "Schedule"
+  pageRef = "/schedule"
+  weight = 40
+
+[[menu.main]]
+  name = "Materials"
+  pageRef = "/materials"
+  weight = 50
+
+[[menu.main]]
+  name = "Resources"
+  pageRef = "/resources"
+  weight = 60
+
+[markup.goldmark.renderer]
+  unsafe = true

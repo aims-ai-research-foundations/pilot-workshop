@@ -1,0 +1,63 @@
+---
+title: "Materials"
+layout: "materials"
+days:
+  - day: "Day 1"
+    date: "Monday, 15 June"
+    theme: "Foundations"
+    lecture: "Technical Lecture: Represent Your Language Data (Course 02)"
+    materials: "https://github.com/aims-ai-research-foundations/pilot-workshop/tree/main/lectures/day1"
+    activities:
+      - "Welcome, ice breakers, and programme overview"
+      - "Introduction to Bloom's Taxonomy"
+      - "UCL Lecturer Toolkit walkthrough"
+      - "Peer teaching and feedback"
+      - "AI activities · RI activities"
+      - "<strong>Explain It Back</strong> and knowledge check"
+  - day: "Day 2"
+    date: "Tuesday, 16 June"
+    theme: "Teaching Practice"
+    lecture: "Technical Lecture: Design &amp; Train Neural Networks (Course 03)"
+    materials: "https://github.com/aims-ai-research-foundations/pilot-workshop/tree/main/lectures/day2"
+    activities:
+      - "Contextualise course materials for Africa"
+      - "Capstone project overview and brainstorming"
+      - "Slide creation for your own teaching"
+      - "AI activities · RI activities"
+      - "<strong>Explain It Back</strong> and knowledge check"
+  - day: "Day 3"
+    date: "Wednesday, 17 June"
+    theme: "Delivery & Strategy"
+    lecture: "Technical Lecture: Discover the Transformer (Course 04)"
+    materials: "https://github.com/aims-ai-research-foundations/pilot-workshop/tree/main/lectures/day3"
+    activities:
+      - "Google Cloud Skills Boost platform onboarding"
+      - "Blended curriculum strategies"
+      - "Classroom management"
+      - "AI activities · RI activities"
+      - "<strong>Explain It Back</strong> and knowledge check"
+  - day: "Day 4"
+    date: "Thursday, 18 June"
+    theme: "Hands-On Practicals"
+    lecture: "Technical Lecture: Fine-tune Your Model (Course 05)"
+    materials: "https://github.com/aims-ai-research-foundations/pilot-workshop/tree/main/lectures/day4"
+    activities:
+      - "Developer skills session"
+      - "Hands-on notebook lab with troubleshooting"
+      - "Challenge lab walkthrough"
+      - "AI activities · RI activities"
+      - "<strong>Explain It Back</strong> and knowledge check"
+  - day: "Day 5"
+    date: "Friday, 19 June"
+    theme: "Capstone & Closing"
+    lecture: "Technical Lecture: Accelerate Your Model (Course 07)"
+    materials: "https://github.com/aims-ai-research-foundations/pilot-workshop/tree/main/lectures/day5"
+    activities:
+      - "Creative assessment design workshop"
+      - "Capstone project presentations"
+      - "Closing reflections and next steps"
+      - "AI activities · RI activities"
+---
+
+A day-by-day breakdown of the workshop, with the planned activities for each day and direct links to the slides, notebooks, and exercises in the GitHub repository. Click any day to expand.
+

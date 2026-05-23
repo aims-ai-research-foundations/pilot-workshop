@@ -21,7 +21,25 @@
 <div class="intro-overlap">
   <div class="container">
     <div class="intro-card fade-in">
-      {{ .Content }}
+      <p class="intro-eyebrow">{{ .Params.intro.eyebrow }}</p>
+      <p class="intro-lede">{{ .Params.intro.lede }}</p>
+      <p class="intro-body">{{ .Params.intro.body }}</p>
+      {{- with .Params.intro.links }}
+      <div class="intro-explore">
+        <p class="intro-explore-label">Continue exploring</p>
+        <ul class="intro-explore-list">
+          {{- range . }}
+          {{- $label := .label }}
+          {{- with $.Site.GetPage .pageRef }}
+          <li><a href="{{ .RelPermalink }}">
+            <span>{{ $label }}</span>
+            {{ partial "icon.html" "arrow-right" }}
+          </a></li>
+          {{- end }}
+          {{- end }}
+        </ul>
+      </div>
+      {{- end }}
     </div>
   </div>
 </div>

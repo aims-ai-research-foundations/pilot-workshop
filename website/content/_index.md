@@ -3,6 +3,19 @@ title: "AIMS AI Research Foundations Pilot Workshop"
 hero:
   title: "AIMS AI Research Foundations"
   subtitle: "Pilot Workshop · Muizenberg, Cape Town"
+intro:
+  eyebrow: "The AIMS Pilot Workshop"
+  lede: "This workshop is an internal dry run of the lecturer training workshops at AIMS South Africa, as part of the AI Research Foundations for Higher Education programme."
+  body: "Building on a month of virtual pre-work through the AI Research Foundations curriculum from Google DeepMind, attendees spend five days in person at AIMS South Africa deepening their knowledge of cutting-edge AI and practising teaching craft. Their feedback shapes the workshop before it rolls out to 30 universities across Africa through 2028."
+  links:
+    - label: "Learn more about the programme"
+      pageRef: "/about"
+    - label: "See the pre-workshop steps"
+      pageRef: "/pre-workshop"
+    - label: "See the schedule"
+      pageRef: "/schedule"
+    - label: "Meet the team"
+      pageRef: "/team"
 threads:
   - title: "Learn"
     icon: "brain-circuit"

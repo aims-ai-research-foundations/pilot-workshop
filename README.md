@@ -33,8 +33,6 @@ Materials are split by type so each tool is used for what it does best:
 - **GitHub (this repo)** — notebooks, code, exercises, and small datasets. Versioned, Colab-ready, and forkable for each cohort.
 - **Google Drive** — slides, the Lecturer Toolkit, rubrics, and other living documents that facilitators co-edit. Linked from the [website Resources page](https://aims-ai-research-foundations.github.io/pilot-workshop/resources/).
 
-Rule of thumb: things that get **diffed and reused** go on GitHub; things that get **co-edited** go on Drive. Keep large binaries (`.pptx`, video, datasets over ~50 MB) off Git — they bloat history and can't be diffed. These are ignored in `.gitignore`.
-
 ## Schedule
 
 <details>

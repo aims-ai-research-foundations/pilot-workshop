@@ -1,105 +1,104 @@
 ---
 title: "Schedule"
 layout: "schedule"
-themes:
-  - day: "Monday"
-    date: "15 June"
-    name: "Foundations"
-    slug: "foundations"
-    sessions:
-      - "Welcome, ice breakers, and programme overview"
-      - "Introduction to Bloom's Taxonomy"
-      - "UCL Lecturer Toolkit walkthrough"
-      - "Peer teaching and feedback"
-      - "<strong>Technical Lecture:</strong> Represent Your Language Data (Course 02)"
-  - day: "Tuesday"
-    date: "16 June"
-    name: "Teaching Practice"
-    slug: "teaching"
-    sessions:
-      - "Contextualise course materials for Africa"
-      - "Capstone project overview and brainstorming"
-      - "Slide creation for your own teaching"
-      - "<strong>Technical Lecture:</strong> Design &amp; Train Neural Networks (Course 03)"
-  - day: "Wednesday"
-    date: "17 June"
-    name: "Delivery & Strategy"
-    slug: "delivery"
-    sessions:
-      - "Google Cloud Skills Boost platform onboarding"
-      - "Blended curriculum strategies"
-      - "Classroom management"
-      - "<strong>Technical Lecture:</strong> Discover the Transformer (Course 04)"
-  - day: "Thursday"
-    date: "18 June"
-    name: "Hands-On Practicals"
-    slug: "hands-on"
-    sessions:
-      - "Developer skills session"
-      - "Hands-on notebook lab with troubleshooting"
-      - "Challenge lab walkthrough"
-      - "<strong>Technical Lecture:</strong> Fine-tune Your Model (Course 05)"
-  - day: "Friday"
-    date: "19 June"
-    name: "Capstone & Closing"
-    slug: "capstone"
-    sessions:
-      - "<strong>Technical Lecture:</strong> Accelerate Your Model (Course 07)"
-      - "Creative assessment design workshop"
-      - "Capstone project presentations"
-      - "Closing reflections and next steps"
 legend:
-  - cat: "social"
-    label: "Social"
   - cat: "lecture"
-    label: "Lecture"
+    label: "Technical Lecture"
   - cat: "collab"
-    label: "Collaborative"
+    label: "Toolkit & Activities"
   - cat: "hands"
     label: "Hands-On"
+  - cat: "social"
+    label: "Social & Welcome"
   - cat: "break"
     label: "Break"
-grid:
-  - time: "09:00–11:00"
-    cells:
-      - { text: "Ice Breakers · Programme &amp; Course Overview", cat: "social" }
-      - { text: "Technical Lecture", cat: "lecture" }
-      - { text: "Technical Lecture", cat: "lecture" }
-      - { text: "Technical Lecture", cat: "lecture" }
-      - { text: "Technical Lecture", cat: "lecture" }
-  - time: "11:00–11:30"
-    break: "Break"
-  - time: "11:30–13:00"
-    cells:
-      - { text: "Bloom's Taxonomy · AI vs RI Activities", cat: "collab" }
-      - { text: "Explain It Back · Knowledge Check", cat: "lecture" }
-      - { text: "Explain It Back · Knowledge Check", cat: "lecture" }
-      - { text: "Explain It Back · Knowledge Check", cat: "lecture" }
-      - { text: "Explain It Back · Knowledge Check", cat: "lecture" }
-  - time: "13:00–14:00"
-    break: "Lunch"
-  - time: "14:00–15:30"
-    cells:
-      - { text: "UCL Lecturer Toolkit", cat: "collab" }
-      - { text: "Contextualise for Africa · Capstone Project Overview", cat: "collab" }
-      - { text: "Google Cloud Skills Boost Onboarding", cat: "collab" }
-      - { text: "Dev Skills", cat: "hands" }
-      - { text: "Creative Assessment Design", cat: "hands" }
-  - time: "15:30–16:00"
-    break: "Break"
-  - time: "16:00–17:00"
-    cells:
-      - { text: "Peer Teaching &amp; Feedback", cat: "social" }
-      - { text: "Slide Creation Session", cat: "collab" }
-      - { text: "Blended Curriculum Strategies · Classroom Management", cat: "collab" }
-      - { text: "Hands-On Notebook Lab", cat: "hands" }
-      - { text: "Capstone Project Presentation · Closing", cat: "social" }
+days:
+  - day: "Monday"
+    date: "15 Jun"
+    title: "Welcome & Foundations"
+    slug: "foundations"
+    after: "Social · Fact Cards"
+    afterTime: "19:30–20:30"
+    sessions:
+      - { start: "09:00", end: "09:30", name: "Registration & Welcoming", cat: "social" }
+      - { start: "09:30", end: "10:00", name: "AI Trainer Bingo", cat: "social" }
+      - { start: "10:00", end: "10:45", name: "Workshop Overview", cat: "social" }
+      - { start: "10:45", end: "11:15", name: "Introduce Pedagogical Concept", cat: "collab" }
+      - { start: "11:15", end: "12:00", name: "Coffee break", cat: "break" }
+      - { start: "12:00", end: "13:00", name: "Course 2 Technical Lecture", cat: "lecture" }
+      - { start: "13:00", end: "14:00", name: "Lunch", cat: "break" }
+      - { start: "14:00", end: "14:30", name: "AI vs RI Activities", cat: "collab" }
+      - { start: "14:30", end: "15:30", name: "Toolkit Activity Walkthrough", cat: "collab" }
+      - { start: "15:30", end: "16:00", name: "Coffee break", cat: "break" }
+      - { start: "16:00", end: "17:00", name: "Explain It Back", cat: "lecture" }
+  - day: "Tuesday"
+    date: "16 Jun"
+    title: "Teaching for Africa"
+    slug: "teaching"
+    after: "Movie Night"
+    afterTime: "19:30–21:30"
+    sessions:
+      - { start: "10:00", end: "10:30", name: "Social · Africa Quiz", cat: "social" }
+      - { start: "10:30", end: "11:30", name: "Course 3 Technical Lecture", cat: "lecture" }
+      - { start: "11:30", end: "12:00", name: "Coffee break", cat: "break" }
+      - { start: "12:00", end: "13:00", name: "Contextualize for Africa", cat: "collab" }
+      - { start: "13:00", end: "14:00", name: "Lunch", cat: "break" }
+      - { start: "14:00", end: "15:00", name: "Guest session (DeepMind)", cat: "lecture" }
+      - { start: "15:00", end: "15:30", name: "Toolkit Activity Walkthrough", cat: "collab" }
+      - { start: "15:30", end: "16:00", name: "Coffee break", cat: "break" }
+      - { start: "16:00", end: "17:00", name: "Explain It Back", cat: "lecture" }
+  - day: "Wednesday"
+    date: "17 Jun"
+    title: "Delivery & Practice"
+    slug: "delivery"
+    after: "Social Dinner"
+    afterTime: "18:00–19:00"
+    sessions:
+      - { start: "09:15", end: "10:15", name: "Course 4 Technical Lecture", cat: "lecture" }
+      - { start: "10:15", end: "11:15", name: "Toolkit Activity Walkthrough", cat: "collab" }
+      - { start: "11:15", end: "11:45", name: "Coffee break", cat: "break" }
+      - { start: "11:45", end: "13:00", name: "Explain It Back", cat: "lecture" }
+      - { start: "13:00", end: "14:00", name: "Lunch", cat: "break" }
+      - { start: "14:00", end: "15:00", name: "Slide Creation Session", cat: "collab" }
+      - { start: "15:00", end: "15:30", name: "GCSB Onboarding", cat: "collab" }
+      - { start: "15:30", end: "16:00", name: "Coffee break", cat: "break" }
+      - { start: "16:00", end: "17:00", name: "Challenge Lab Walkthrough", cat: "hands" }
+  - day: "Thursday"
+    date: "18 Jun"
+    title: "Hands-On & Agents"
+    slug: "hands-on"
+    after: "Games Night"
+    afterTime: "19:30–20:30"
+    sessions:
+      - { start: "09:15", end: "10:15", name: "Course 5 Technical Lecture", cat: "lecture" }
+      - { start: "10:15", end: "11:15", name: "Toolkit Activity Walkthrough", cat: "collab" }
+      - { start: "11:15", end: "11:45", name: "Coffee break", cat: "break" }
+      - { start: "11:45", end: "13:00", name: "Explain It Back", cat: "lecture" }
+      - { start: "13:00", end: "14:00", name: "Lunch", cat: "break" }
+      - { start: "14:00", end: "14:45", name: "Beach Time", cat: "social" }
+      - { start: "14:45", end: "15:30", name: "Agentic AI Hands-On", cat: "hands" }
+      - { start: "15:30", end: "16:00", name: "Coffee break", cat: "break" }
+      - { start: "16:00", end: "17:00", name: "Agentic AI Hands-On", cat: "hands" }
+  - day: "Friday"
+    date: "19 Jun"
+    title: "Capstone & Closing"
+    slug: "capstone"
+    after: "Closing Party"
+    afterTime: "19:00–21:30"
+    sessions:
+      - { start: "09:15", end: "10:15", name: "Course 7 Technical Lecture", cat: "lecture" }
+      - { start: "10:15", end: "11:15", name: "Toolkit Activity Walkthrough", cat: "collab" }
+      - { start: "11:15", end: "11:45", name: "Coffee break", cat: "break" }
+      - { start: "11:45", end: "13:00", name: "Explain It Back", cat: "lecture" }
+      - { start: "13:00", end: "14:00", name: "Lunch", cat: "break" }
+      - { start: "14:00", end: "15:00", name: "Capstone Project Workshop", cat: "collab" }
+      - { start: "15:00", end: "15:30", name: "Coffee break", cat: "break" }
+      - { start: "15:30", end: "16:30", name: "Fireside Chat", cat: "social" }
+      - { start: "16:30", end: "17:00", name: "Closing remarks", cat: "social" }
 ---
 
-Five days blending lectures, hands-on sessions, networking, and collaborative activities. Every day weaves through the four threads: **learn, teach, adapt, connect**.
-
-Every day includes a technical lecture on the curriculum, AI and RI activities, Explain It Back sessions with structured peer feedback, and shared meals and coffee breaks.
+Five days blending technical lectures, hands-on sessions, peer teaching, and social activities. Every day weaves through the four threads: **learn, teach, adapt, connect**.
 
 {{< note >}}
-**This schedule is tentative.** The detailed day-by-day timetable will be circulated closer to the workshop.
+**This schedule is tentative.** Times and sessions may shift; the final timetable will be confirmed closer to the workshop.
 {{< /note >}}

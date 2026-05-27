@@ -1102,6 +1102,122 @@ section { padding: 3rem 0; }
 .swatch-hands { background: #D6F0DC; }
 .swatch-break { background: #EAEAEA; }
 
+/* ---------- Schedule timetable (calendar grid) ---------- */
+.timetable-scroll {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.5rem;
+}
+.timetable {
+  display: grid;
+  grid-template-columns: 54px repeat(5, minmax(155px, 1fr));
+  grid-template-rows: auto repeat(32, 22px);
+  gap: 3px;
+  min-width: 860px;
+}
+.tt-corner { grid-column: 1; grid-row: 1; }
+.tt-dayhead {
+  border-top: 4px solid var(--accent);
+  background: var(--bg-tint);
+  border-radius: 8px 8px 0 0;
+  padding: 0.55rem 0.7rem;
+}
+.tt-dayhead[data-theme="foundations"] { border-top-color: #E0A82E; }
+.tt-dayhead[data-theme="teaching"] { border-top-color: #4E7FD6; }
+.tt-dayhead[data-theme="delivery"] { border-top-color: #8A5BD4; }
+.tt-dayhead[data-theme="hands-on"] { border-top-color: #3D9E5A; }
+.tt-dayhead[data-theme="capstone"] { border-top-color: #2D1A4D; }
+.tt-dayname { font-size: 0.85rem; font-weight: 700; color: var(--accent); }
+.tt-dayname span { font-weight: 400; color: var(--text-muted); font-size: 0.76rem; }
+.tt-daytitle { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.1rem; }
+.tt-time {
+  font-size: 0.66rem;
+  color: var(--text-muted);
+  text-align: right;
+  padding-right: 0.5rem;
+  transform: translateY(-0.5em);
+  font-weight: 600;
+}
+.tt-sess {
+  border-radius: 6px;
+  padding: 0.3rem 0.45rem;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  overflow: hidden;
+  min-height: 0;
+}
+.tt-sess .sess-time {
+  display: block;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.tt-sess .sess-name { display: block; color: var(--text); font-weight: 500; }
+.tt-sess.sess--lecture { background: #D8E5FF; }
+.tt-sess.sess--collab { background: #E8DAFB; }
+.tt-sess.sess--hands { background: #D6F0DC; }
+.tt-sess.sess--social { background: #FFF1C2; }
+.tt-sess.sess--break { background: #F0F0F0; }
+.tt-sess.sess--break .sess-name { color: var(--text-muted); font-weight: 400; }
+
+.tt-afterhours {
+  display: grid;
+  grid-template-columns: 54px repeat(5, minmax(155px, 1fr));
+  gap: 3px;
+  min-width: 860px;
+  margin-top: 6px;
+}
+.tt-ah-label {
+  grid-column: 1;
+  font-size: 0.64rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-align: right;
+  padding-right: 0.5rem;
+  align-self: center;
+  line-height: 1.1;
+}
+.tt-ah-cell {
+  background: var(--accent-soft);
+  border-radius: 6px;
+  padding: 0.45rem 0.55rem;
+  font-size: 0.72rem;
+}
+.tt-ah-cell .sess-time { display: block; font-size: 0.6rem; color: var(--text-muted); font-weight: 600; }
+.tt-ah-cell .sess-name { display: block; color: var(--accent); font-weight: 600; }
+
+/* ---------- Work-in-progress badge ---------- */
+.materials-meta {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin: 0 0 0.6rem;
+}
+.wip-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding: 0.4rem 0.85rem;
+  background: var(--bg-tint);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.wip-badge::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #E0A82E;
+}
+.resource-card--wip { opacity: 0.85; }
+
 /* Apply category colours to day-card titles too */
 .day-card[data-theme="foundations"] { border-top: 4px solid #FFD45C; }
 .day-card[data-theme="teaching"] { border-top: 4px solid #6B96E5; }

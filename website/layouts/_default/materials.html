@@ -7,17 +7,15 @@
 
   {{- range .Params.days }}
   <details class="day-details">
-    <summary>{{ .day }} · {{ .date }} · {{ .theme }}</summary>
+    <summary>{{ .day }} · {{ .date }} · {{ .title }}</summary>
     <div class="content">
-      <div class="meta">{{ .lecture }}</div>
+      <p class="materials-meta">Sessions with materials</p>
       <ul>
         {{- range .activities }}
-        <li>{{ . | safeHTML }}</li>
+        <li>{{ . }}</li>
         {{- end }}
       </ul>
-      {{- with .materials }}
-      <p style="margin-top: 1rem;"><a href="{{ . }}" target="_blank" rel="noopener">View materials on GitHub →</a></p>
-      {{- end }}
+      <span class="wip-badge">Work in progress</span>
     </div>
   </details>
   {{- end }}

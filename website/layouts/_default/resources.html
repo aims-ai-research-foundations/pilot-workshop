@@ -6,10 +6,14 @@
   </div>
   <div class="resources-grid">
     {{- range .Params.resources }}
-    <article class="resource-card">
+    <article class="resource-card{{ if .wip }} resource-card--wip{{ end }}">
       <h3>{{ .title }}</h3>
       <p class="desc">{{ .description }}</p>
+      {{- if .wip }}
+      <span class="wip-badge">Work in progress</span>
+      {{- else }}
       <a class="link" href="{{ .url }}" target="_blank" rel="noopener">{{ .linkLabel | default "Open" }} {{ partial "icon.html" "external-link" }}</a>
+      {{- end }}
     </article>
     {{- end }}
   </div>

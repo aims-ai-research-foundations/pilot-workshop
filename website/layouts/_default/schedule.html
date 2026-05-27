@@ -1,21 +1,9 @@
 {{ define "main" }}
 <article class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
   <h1>{{ .Title }}</h1>
-  <div class="prose" style="margin: 0 0 1rem; padding: 0; max-width: none;">
+  <div class="prose" style="margin: 0 0 1.5rem; padding: 0; max-width: none;">
     {{ .Content }}
   </div>
-
-  <h2 style="margin-top: 2rem;">Daily themes</h2>
-  <div class="theme-cards fade-in-stagger">
-    {{- range .Params.themes }}
-    <div class="theme-card" data-theme="{{ .slug }}">
-      <div class="day">{{ .day }} · {{ .date }}</div>
-      <h3 class="name">{{ .name }}</h3>
-    </div>
-    {{- end }}
-  </div>
-
-  <h2 style="margin-top: 2.5rem;">At a glance</h2>
 
   <div class="legend">
     {{- range .Params.legend }}
@@ -23,43 +11,49 @@
     {{- end }}
   </div>
 
-  <table class="schedule-grid">
-    <thead>
-      <tr>
-        <th>Time</th>
-        {{- range .Params.themes }}
-        <th>{{ .day }}<br><small style="font-weight:400; opacity:0.8;">{{ .date }}</small></th>
-        {{- end }}
-      </tr>
-    </thead>
-    <tbody>
-      {{- range .Params.grid }}
-      <tr>
-        <td class="time">{{ .time }}</td>
-        {{- if .break }}
-        <td class="cell-break" colspan="5">{{ .break }}</td>
-        {{- else }}
-        {{- range .cells }}
-        <td class="cell-{{ .cat }}">{{ .text | safeHTML }}</td>
-        {{- end }}
-        {{- end }}
-      </tr>
+  <div class="timetable-scroll">
+    <div class="timetable">
+      <div class="tt-corner"></div>
+      {{- range $i, $d := .Params.days }}
+      <div class="tt-dayhead" data-theme="{{ $d.slug }}" style="grid-column: {{ add $i 2 }}; grid-row: 1;">
+        <div class="tt-dayname">{{ $d.day }} <span>{{ $d.date }}</span></div>
+        <div class="tt-daytitle">{{ $d.title }}</div>
+      </div>
       {{- end }}
-    </tbody>
-  </table>
 
-  <div class="day-cards">
-    {{- range .Params.themes }}
-    <article class="day-card" data-theme="{{ .slug }}">
-      <h3>{{ .day }} · {{ .name }}</h3>
-      <div class="meta">{{ .date }}</div>
-      <ul>
-        {{- range .sessions }}
-        <li>{{ . | safeHTML }}</li>
-        {{- end }}
-      </ul>
-    </article>
-    {{- end }}
+      {{- range $h := (seq 9 17) }}
+      <div class="tt-time" style="grid-column: 1; grid-row: {{ add (mul (sub $h 9) 4) 2 }};">{{ printf "%02d:00" $h }}</div>
+      {{- end }}
+
+      {{- range $i, $d := .Params.days }}
+      {{- range $d.sessions }}
+      {{- $s := split .start ":" }}
+      {{- $sH := int (strings.TrimPrefix "0" (index $s 0)) }}
+      {{- $sM := int (strings.TrimPrefix "0" (index $s 1)) }}
+      {{- $sMin := add (mul $sH 60) $sM }}
+      {{- $e := split .end ":" }}
+      {{- $eH := int (strings.TrimPrefix "0" (index $e 0)) }}
+      {{- $eM := int (strings.TrimPrefix "0" (index $e 1)) }}
+      {{- $eMin := add (mul $eH 60) $eM }}
+      {{- $sRow := add (div (sub $sMin 540) 15) 2 }}
+      {{- $eRow := add (div (sub $eMin 540) 15) 2 }}
+      <div class="tt-sess sess--{{ .cat }}" style="grid-column: {{ add $i 2 }}; grid-row: {{ $sRow }} / {{ $eRow }};">
+        <span class="sess-time">{{ .start }}–{{ .end }}</span>
+        <span class="sess-name">{{ .name }}</span>
+      </div>
+      {{- end }}
+      {{- end }}
+    </div>
+
+    <div class="tt-afterhours">
+      <div class="tt-ah-label">After hours</div>
+      {{- range .Params.days }}
+      <div class="tt-ah-cell">
+        <span class="sess-time">{{ .afterTime }}</span>
+        <span class="sess-name">{{ .after }}</span>
+      </div>
+      {{- end }}
+    </div>
   </div>
 </article>
 {{ end }}

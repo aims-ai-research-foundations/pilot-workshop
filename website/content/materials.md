@@ -30,7 +30,7 @@ days:
       - "Challenge Lab Walkthrough"
   - day: "Day 4"
     date: "Thursday, 18 June"
-    title: "Hands-On & Agents"
+    title: "Agentic AI for Educators"
     activities:
       - "Course 5 Technical Lecture (Fine-tune Your Model)"
       - "Toolkit Activity Walkthrough"

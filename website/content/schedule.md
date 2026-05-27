@@ -3,13 +3,13 @@ title: "Schedule"
 layout: "schedule"
 legend:
   - cat: "lecture"
-    label: "Technical Lecture"
+    label: "Technical Content"
   - cat: "collab"
-    label: "Toolkit & Activities"
+    label: "Pedagogy & Teaching"
   - cat: "hands"
     label: "Hands-On"
   - cat: "social"
-    label: "Social & Welcome"
+    label: "Social Activities"
   - cat: "break"
     label: "Break"
 days:
@@ -60,12 +60,12 @@ days:
       - { start: "11:45", end: "13:00", name: "Explain It Back", cat: "lecture" }
       - { start: "13:00", end: "14:00", name: "Lunch", cat: "break" }
       - { start: "14:00", end: "15:00", name: "Slide Creation Session", cat: "collab" }
-      - { start: "15:00", end: "15:30", name: "GCSB Onboarding", cat: "collab" }
+      - { start: "15:00", end: "15:30", name: "Google Skills Onboarding", cat: "collab" }
       - { start: "15:30", end: "16:00", name: "Coffee break", cat: "break" }
       - { start: "16:00", end: "17:00", name: "Challenge Lab Walkthrough", cat: "hands" }
   - day: "Thursday"
     date: "18 Jun"
-    title: "Hands-On & Agents"
+    title: "Agentic AI for Educators"
     slug: "hands-on"
     after: "Games Night"
     afterTime: "19:30–20:30"

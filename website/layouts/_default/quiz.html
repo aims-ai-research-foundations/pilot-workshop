@@ -354,11 +354,28 @@
 
   // ---------- Sound ----------
   var soundOn = loadSound();
-  var actx = null;
+  var actx = null, audioReady = false;
   function ensureAudio() {
     if (actx) return;
     try { var AC = window.AudioContext || window.webkitAudioContext; if (AC) actx = new AC(); } catch (e) { actx = null; }
   }
+  // Mobile browsers need the audio context unlocked inside a user gesture.
+  // Unlock on the first touch/click anywhere, and keep it warm on later taps.
+  function unlockAudio() {
+    ensureAudio();
+    if (!actx) return;
+    if (actx.state === "suspended") actx.resume();
+    if (!audioReady) {
+      audioReady = true;
+      try {
+        var b = actx.createBuffer(1, 1, 22050), s = actx.createBufferSource();
+        s.buffer = b; s.connect(actx.destination); s.start(0);
+      } catch (e) {}
+    }
+  }
+  ["pointerdown", "touchend", "click"].forEach(function (ev) {
+    document.addEventListener(ev, unlockAudio, { passive: true });
+  });
   function tone(freq, start, dur, type, vol) {
     if (!actx) return;
     var o = actx.createOscillator(), g = actx.createGain();

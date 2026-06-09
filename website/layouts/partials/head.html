@@ -10,4 +10,5 @@
 <meta property="og:type" content="website">
 <meta property="og:image" content="{{ "img/landing/aims-building.jpg" | absURL }}">
 
-<link rel="stylesheet" href="{{ "css/main.css" | relURL }}">
+{{- $css := resources.Get "css/main.css" | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}">

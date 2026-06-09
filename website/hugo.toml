@@ -61,6 +61,11 @@ defaultContentLanguage = 'en'
   weight = 30
 
 [[menu.main]]
+  name = "Quiz"
+  pageRef = "/quiz"
+  weight = 33
+
+[[menu.main]]
   name = "Checklist"
   pageRef = "/checklist"
   weight = 35

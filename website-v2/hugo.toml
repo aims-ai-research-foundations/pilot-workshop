@@ -29,7 +29,7 @@ defaultContentLanguage = 'en'
 
 [[params.partners]]
   name = "University College London"
-  image = "img/logos/ucl.jpeg"
+  image = "img/logos/ucl.png"
   url = "https://www.ucl.ac.uk"
   group = "partner"
 

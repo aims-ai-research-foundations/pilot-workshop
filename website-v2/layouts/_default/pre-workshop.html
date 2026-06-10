@@ -27,5 +27,16 @@
     <h3>Support during pre-work</h3>
     <p>{{ .Params.support | safeHTML }}</p>
   </div>
+
+  {{ with .Site.GetPage "/quiz" }}
+  <div class="quiz-cta">
+    <div class="quiz-cta-text">
+      <p class="eyebrow">Test yourself</p>
+      <h3>Take the Workshop Readiness Quiz</h3>
+      <p>Twenty quick questions across the first four courses, from basic Python to transformers. See where you shine and what is worth a refresher before you arrive.</p>
+    </div>
+    <a class="btn quiz-cta-btn btn-pulse" href="{{ .RelPermalink }}">Start the quiz {{ partial "icon.html" "arrow-right" }}</a>
+  </div>
+  {{ end }}
 </article>
 {{ end }}

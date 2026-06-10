@@ -41,13 +41,13 @@ jobs:
         env:
           HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
           HUGO_ENVIRONMENT: production
-        working-directory: ./website
+        working-directory: ./website-v2
         run: |
           hugo --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./website/public
+          path: ./website-v2/public
 
   deploy:
     environment:

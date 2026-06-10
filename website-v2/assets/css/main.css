@@ -1795,3 +1795,30 @@ section { padding: 3rem 0; }
   background: rgba(54, 26, 84, 0.3);
   transform: translateX(-1px);
 }
+
+/* Workshop Readiness Quiz CTA card (pre-workshop page) */
+.quiz-cta {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 18px;
+  padding: 2.25rem 2.5rem;
+  margin-top: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+}
+.quiz-cta-text { flex: 1 1 22rem; }
+.quiz-cta .eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin: 0 0 0.4rem;
+}
+.quiz-cta h3 { color: #fff; font-size: 1.45rem; margin: 0 0 0.5rem; }
+.quiz-cta p { color: rgba(255, 255, 255, 0.85); margin: 0; max-width: 52ch; }
+.quiz-cta .quiz-cta-btn { white-space: nowrap; flex-shrink: 0; align-self: center; }
+.quiz-cta .btn-pulse { animation-name: pulse-ring-gold; }

@@ -1,0 +1,46 @@
+{{ define "main" }}
+<article class="container" style="padding-top: 3rem; padding-bottom: 3rem;">
+  <div class="about-header with-grid">
+    <p class="section-eyebrow">About</p>
+    <h1 class="section-title" style="margin-bottom: 1.5rem;">The pilot workshop</h1>
+
+    <div class="about-intro fade-in">
+      {{ .Content }}
+    </div>
+  </div>
+
+  <section class="about-section fade-in">
+    <div class="about-image">
+      <img src="{{ "img/others/ai-research-foundations-for-higher-education-programme.jpeg" | relURL }}" alt="AI Research Foundations curriculum on Google Skills">
+    </div>
+    <div class="about-text">
+      <p class="section-eyebrow">The programme</p>
+      <h2>About the programme</h2>
+      <p>The <strong>AI Research Foundations for Higher Education</strong> programme gives African universities full support to teach a semester-long Artificial Intelligence course: a world-class curriculum developed by <strong>Google DeepMind</strong>, a blended-learning teaching toolkit from <strong>University College London (UCL)</strong>, and workshops for lecturers and teaching assistants, supported by <strong>Google.org</strong>.</p>
+      <p>Through 2028, the programme will reach <strong>30 universities</strong> across Ghana (🇬🇭), Kenya (🇰🇪), Nigeria (🇳🇬), and South Africa (🇿🇦).</p>
+      <ul>
+        <li>A world-class AI curriculum with 40+ hands-on Jupyter notebooks, freely available on <a class="gs-link" href="https://www.skills.google/paths/3135" target="_blank" rel="noopener">Google Skills</a>.</li>
+        <li>Intensive training workshops for lecturers and teaching assistants across four countries.</li>
+        <li>Pilot cohort hosted by AIMS South Africa in Muizenberg, June 15–19 2026.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="about-section reverse fade-in">
+    <div class="about-image">
+      <img src="{{ "img/others/aims-sa-student-graduation.jpg" | relURL }}" alt="Students graduating at AIMS South Africa">
+    </div>
+    <div class="about-text">
+      <p class="section-eyebrow">The host</p>
+      <h2>About AIMS South Africa</h2>
+      <p>The <strong>African Institute for Mathematical Sciences</strong> is a pan-African centre of excellence for postgraduate training and research in the mathematical sciences, founded in Muizenberg, Cape Town in 2003.</p>
+      <ul>
+        <li>Vibrant community of students, researchers, and lecturers from across Africa and the world.</li>
+        <li>On-campus accommodation with meals, Wi-Fi, and laundry services included.</li>
+        <li>Steps from the beautiful Muizenberg beach, and a short train ride from central Cape Town.</li>
+        <li>Non-smoking, alcohol-free campus.</li>
+      </ul>
+    </div>
+  </section>
+</article>
+{{ end }}

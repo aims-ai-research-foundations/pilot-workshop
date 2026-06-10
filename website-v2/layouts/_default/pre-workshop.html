@@ -1,0 +1,31 @@
+{{ define "main" }}
+<article class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
+  <h1>{{ .Title }}</h1>
+  <div class="prose" style="margin: 0 0 1rem; padding: 0; max-width: none;">
+    {{ .Content }}
+  </div>
+
+  <h2 style="margin-top: 2rem;">Getting set up</h2>
+  <div class="steps">
+    {{- range $i, $s := .Params.steps }}
+    <div class="step">
+      <div class="number">{{ add $i 1 }}</div>
+      <div>
+        <h3>{{ $s.title }}</h3>
+        <p>{{ $s.body | safeHTML }}</p>
+      </div>
+    </div>
+    {{- end }}
+  </div>
+
+  <div class="callout callout-gold">
+    <h3>Target</h3>
+    <p>{{ .Params.target | safeHTML }}</p>
+  </div>
+
+  <div class="callout callout-gold">
+    <h3>Support during pre-work</h3>
+    <p>{{ .Params.support | safeHTML }}</p>
+  </div>
+</article>
+{{ end }}

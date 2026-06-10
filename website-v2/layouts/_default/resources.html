@@ -1,0 +1,21 @@
+{{ define "main" }}
+<article class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
+  <h1>{{ .Title }}</h1>
+  <div class="prose" style="margin: 0 0 1rem; padding: 0; max-width: none;">
+    {{ .Content }}
+  </div>
+  <div class="resources-grid">
+    {{- range .Params.resources }}
+    <article class="resource-card{{ if .wip }} resource-card--wip{{ end }}">
+      <h3>{{ .title }}</h3>
+      <p class="desc">{{ .description }}</p>
+      {{- if .wip }}
+      <span class="wip-badge">Work in progress</span>
+      {{- else }}
+      <a class="link" href="{{ .url }}" target="_blank" rel="noopener">{{ .linkLabel | default "Open" }} {{ partial "icon.html" "external-link" }}</a>
+      {{- end }}
+    </article>
+    {{- end }}
+  </div>
+</article>
+{{ end }}

@@ -1,0 +1,21 @@
+{{ define "main" }}
+<article class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
+  <h1>{{ .Title }}</h1>
+  <p class="section-lead" style="text-align: left; margin: 0 0 1rem;">{{ .Content }}</p>
+  <img class="team-photo" src="{{ "img/team/ai-research-foundations-team.jpg" | relURL }}" alt="The AI Research Foundations team at AIMS South Africa">
+
+  <div class="team-grid">
+    {{- range .Params.people }}
+    <article class="person-card">
+      {{ partial "avatar.html" .name }}
+      <div class="info">
+        {{- with .tag }}<span class="tag">{{ . }}</span>{{ end }}
+        <h3>{{ .name }}</h3>
+        <p class="role">{{ .role }}</p>
+        <a href="mailto:{{ .email }}">{{ .email }}</a>
+      </div>
+    </article>
+    {{- end }}
+  </div>
+</article>
+{{ end }}

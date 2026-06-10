@@ -1,0 +1,732 @@
+{{ define "main" }}
+<article class="container quiz-page">
+
+  <!-- Persistent sound toggle (sticky, visible throughout) -->
+  <div class="quiz-topbar">
+    <button id="sound-toggle" class="sound-btn" type="button" aria-pressed="true" aria-label="Turn sound off" title="Sound">
+      <svg class="icon-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+      </svg>
+      <svg class="icon-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+        <line x1="23" y1="9" x2="17" y2="15"/>
+        <line x1="17" y1="9" x2="23" y2="15"/>
+      </svg>
+      <span class="sound-label">Sound</span>
+    </button>
+  </div>
+
+  <!-- ============ INTRO HERO ============ -->
+  <section id="quiz-intro" class="quiz-intro">
+    <div class="quiz-hero" id="quiz-hero">
+      <span class="quiz-badge">◆ Readiness check</span>
+      <h1 class="quiz-title">Workshop Readiness Quiz</h1>
+      <p class="quiz-sub">Twenty quick questions across the first four courses of the AI Research Foundations course on <a href="https://www.skills.google/paths/3135" target="_blank" rel="noopener">Google Skills</a>, from basic Python to transformers. See where you shine and what is worth a refresher before the pilot workshop next week.</p>
+
+      <div class="quiz-chips">
+        <span>📋 20 questions</span>
+        <span>⏱ About 5 minutes</span>
+        <span id="best-chip" hidden>🏆 Best: <strong>0%</strong></span>
+      </div>
+
+      <div class="quiz-hero-foot">
+        <button id="start-btn" class="btn-pill" type="button">
+          <span id="start-label">Take the quiz</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+        <div class="quiz-bar" role="img" aria-label="Your best score so far"><span id="best-bar"></span></div>
+      </div>
+    </div>
+    <p class="quiz-note" id="attempts-note" hidden></p>
+  </section>
+
+  <!-- ============ RUNNER ============ -->
+  <section id="quiz-run" hidden aria-live="polite">
+    <div class="quiz-progress" aria-hidden="true"><span id="progress-fill"></span></div>
+    <div class="quiz-meta">
+      <span id="q-counter">Question 1 of 20</span>
+      <span id="q-topic" class="q-topic"></span>
+    </div>
+    <div id="question-card" class="quiz-card"></div>
+    <div class="quiz-actions">
+      <button id="primary-btn" class="btn-press" type="button" hidden></button>
+    </div>
+  </section>
+
+  <!-- ============ RESULTS ============ -->
+  <section id="quiz-results" hidden>
+    <div class="results-head">
+      <p class="results-eyebrow">Your workshop readiness</p>
+      <div class="score-num"><span id="score-pct">0%</span></div>
+      <p class="score-detail"><span id="score-raw">0 of 20</span> correct</p>
+      <div class="band" id="band"></div>
+      <p class="best-line" id="best-line"></p>
+    </div>
+
+    <h2 class="results-sub">How you did by topic</h2>
+    <div id="topic-breakdown" class="topic-breakdown"></div>
+
+    <div class="results-actions">
+      <button id="review-btn" class="btn-press" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        Review your answers
+      </button>
+      <button id="retake-btn" class="btn-press secondary" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Retake the quiz
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ REVIEW (step-through) ============ -->
+  <section id="quiz-review" hidden>
+    <div class="review-bar">
+      <button id="rev-back" class="link-btn" type="button">‹ Back to results</button>
+      <span id="rev-counter" class="rev-counter"></span>
+    </div>
+    <div class="quiz-progress" aria-hidden="true"><span id="rev-progress"></span></div>
+    <div id="review-card" class="quiz-card"></div>
+    <div class="quiz-actions split">
+      <button id="rev-prev" class="btn-press secondary" type="button">‹ Previous</button>
+      <button id="rev-next" class="btn-press" type="button">Next ›</button>
+    </div>
+  </section>
+
+</article>
+
+<script>
+(function () {
+  "use strict";
+
+  var PATH_URL = "https://www.skills.google/paths/3135";
+  var C = {
+    c1: "https://www.skills.google/paths/3135/course_templates/1341",
+    c2: "https://www.skills.google/paths/3135/course_templates/1452",
+    c3: "https://www.skills.google/paths/3135/course_templates/1450",
+    c4: "https://www.skills.google/paths/3135/course_templates/1451",
+    c7: "https://www.skills.google/paths/3135/course_templates/1555"
+  };
+
+  var TOPICS = {
+    python: "Python (string processing)",
+    lm:     "Language Models & n-grams",
+    tok:    "Tokenization & Embeddings",
+    nn:     "Neural Networks & Training",
+    xfmr:   "Transformers & Attention",
+    gpu:    "Why GPUs Matter",
+    ri:     "Responsible Innovation"
+  };
+  var REVIEW = {
+    python: { url: C.c1, label: "Start with Course 01: Build your own small language model" },
+    lm:     { url: C.c1, label: "Course 01: Build your own small language model" },
+    tok:    { url: C.c2, label: "Course 02: Represent Your Language Data" },
+    nn:     { url: C.c3, label: "Course 03: Design and Train Your Neural Networks" },
+    xfmr:   { url: C.c4, label: "Course 04: Discover the Transformer Architecture" },
+    gpu:    { url: C.c7, label: "Course 07: Accelerate Your Model" },
+    ri:     { url: PATH_URL, label: "AI Research Foundations on Google Skills" }
+  };
+
+  // type: "single" | "tf" | "multi"
+  var QUESTIONS = [
+    { topic:"python", type:"single",
+      q:"What is the value of greeting after this code runs?",
+      code:"name = \"AIMS\"\ngreeting = \"Hello, \" + name + \"!\"",
+      options:["Hello, AIMS!", "Hello, name!", "Hello, + AIMS + !", "HelloAIMS"],
+      correct:0,
+      right:"Correct. The + operator joins strings in order, and the variable name holds \"AIMS\", so the result is \"Hello, AIMS!\". The space after the comma is part of the string, so it shows up in the output.",
+      wrong:"The result is \"Hello, AIMS!\". The + operator concatenates the strings left to right, and name is replaced by its value \"AIMS\". The space and the exclamation mark are part of the literal text, so they appear in the output too." },
+
+    { topic:"python", type:"single",
+      q:"What does this code print?",
+      code:"word = \"Transformer\"\nprint(word[:5].lower())",
+      options:["trans", "Trans", "transformer", "former"],
+      correct:0,
+      right:"Correct. word[:5] keeps the first five characters (\"Trans\"), then .lower() makes them lowercase, giving \"trans\". The methods run left to right, so the slice happens before the lowercasing.",
+      wrong:"It prints \"trans\". The slice word[:5] keeps characters at positions 0 to 4 (\"Trans\"), and .lower() then makes them lowercase. \"former\" would need word[5:], and \"transformer\" would be the whole word lowercased." },
+
+    { topic:"python", type:"multi",
+      q:"After this code runs, which statements about the variable tokens are true?",
+      code:"line = \"  The Cat sat.  \"\ntokens = line.strip().lower().split()",
+      options:[
+        { t:"The leading and trailing spaces have been removed", correct:true,  why:"strip() removes whitespace from both ends of the string before the rest of the chain runs." },
+        { t:"Every character is lowercase",                       correct:true,  why:"lower() converts all characters to lowercase, so \"The Cat\" becomes \"the cat\"." },
+        { t:"tokens is a list of words",                          correct:true,  why:"split() breaks the cleaned text on whitespace and returns a list: [\"the\", \"cat\", \"sat.\"]. Note that \"sat.\" still keeps the full stop, since split() only divides on spaces." },
+        { t:"tokens is a single string",                          correct:false, why:"split() returns a list, not a string. strip() and lower() return strings, but split() is the step that turns the text into separate items." }
+      ] },
+
+    { topic:"lm", type:"single",
+      q:"What does a language model fundamentally do?",
+      options:[
+        "Predicts the next token given the tokens that came before it",
+        "Looks up the grammatically correct version of a sentence in a fixed rulebook",
+        "Counts how often each word appears and returns the most frequent one",
+        "Stores sentences and retrieves the closest matching one from a database"
+      ],
+      correct:0,
+      right:"Correct. A language model assigns probabilities to sequences and predicts what is likely to come next given the context. Text generation, translation, and chat assistants are all built on this next-token prediction.",
+      wrong:"A language model predicts the next token from the ones before it, learning probabilities from large amounts of text. It does not use a fixed grammar rulebook, simple word counts, or a lookup database. Those are much more limited approaches." },
+
+    { topic:"lm", type:"single",
+      q:"A bigram language model predicts the next word using...",
+      options:[
+        "the single previous word",
+        "the two previous words",
+        "every word that came before it in the text",
+        "the most frequent word in the training data"
+      ],
+      correct:0,
+      right:"Correct. A bigram (n = 2) conditions on exactly one previous word. In general an n-gram uses the previous n minus 1 words, so a trigram would use the previous two.",
+      wrong:"A bigram uses just the single previous word. Two previous words would be a trigram, and using every earlier word is closer to what modern models attempt. Always choosing the most frequent word would ignore context entirely." },
+
+    { topic:"lm", type:"tf",
+      q:"A major limitation of n-gram models is that they cannot capture long-range context, because they only look back a fixed, small number of words.",
+      correct:true,
+      feedback:"True. An n-gram only sees a fixed, short window of previous words, so it misses dependencies that span a whole sentence or paragraph, such as losing track of the subject of a long sentence. Overcoming this is a big reason transformers were such a step forward." },
+
+    { topic:"tok", type:"single",
+      q:"What is tokenization?",
+      options:[
+        "Breaking text into smaller units such as words, sub-words, or characters",
+        "Removing punctuation and common stop words from the text",
+        "Replacing each word with its part-of-speech tag",
+        "Shortening a document into a brief summary"
+      ],
+      correct:0,
+      right:"Correct. Tokenization splits raw text into the units a model processes. Modern models usually use sub-word tokens, which balance vocabulary size against sequence length.",
+      wrong:"Tokenization breaks text into smaller units (words, sub-words, or characters). The other options are real text-processing tasks (stop-word removal, part-of-speech tagging, and summarization), but none of them is tokenization." },
+
+    { topic:"tok", type:"tf",
+      q:"Words with similar meanings tend to have embeddings that are close together in vector space.",
+      correct:true,
+      feedback:"True. Embeddings place each token at a point in a high-dimensional space, and training arranges that space so related words sit near each other while unrelated words sit far apart. This is what lets a model treat \"king\" and \"queen\" as more similar than \"king\" and \"banana\"." },
+
+    { topic:"tok", type:"multi",
+      q:"Which of these are common types of tokenization?",
+      options:[
+        { t:"Word-level",  correct:true,  why:"Each whole word is a token. It is simple, but the vocabulary gets large and rare words are hard to handle." },
+        { t:"Character-level", correct:true, why:"Each character is a token. The vocabulary stays tiny, but the sequences become very long." },
+        { t:"Sub-word, such as byte-pair encoding (BPE)", correct:true, why:"Common pieces of words become tokens. This is what most modern models use, since it balances vocabulary size and sequence length and handles rare words well." },
+        { t:"Embedding-level", correct:false, why:"Embeddings are not a way of tokenizing. They come after tokenization, mapping each token to a vector. Mixing up the two steps is a common misconception." }
+      ] },
+
+    { topic:"nn", type:"single",
+      q:"What is overfitting?",
+      options:[
+        "The model performs well on the training data but poorly on new, unseen data",
+        "The model performs poorly on both the training data and new data",
+        "The model performs well on both the training data and new data",
+        "The model performs poorly on training data but well on new data"
+      ],
+      correct:0,
+      right:"Correct. An overfit model has essentially memorised the training data, including its noise, so it does well there but fails to generalise. This is why we always check performance on a held-out test set.",
+      wrong:"Overfitting is strong training performance paired with weak performance on new data. Option B describes underfitting, option C describes a well-generalised model, and option D does not normally happen in practice." },
+
+    { topic:"nn", type:"single",
+      q:"What is the role of backpropagation when training a neural network?",
+      options:[
+        "It calculates how much each weight contributed to the error, so the weights can be updated",
+        "It sets the initial random values of the weights before training begins",
+        "It chooses which training examples go into each batch",
+        "It decides when training should stop to avoid overfitting"
+      ],
+      correct:0,
+      right:"Correct. Backpropagation works backwards from the loss through the network, computing the gradient of the loss with respect to each weight. An optimiser such as stochastic gradient descent then uses those gradients to update the weights.",
+      wrong:"Backpropagation computes the gradients that tell the optimiser how to adjust each weight. The other options describe real but different parts of training: weight initialisation, batching, and early stopping." },
+
+    { topic:"nn", type:"single",
+      q:"Your model reaches very low training loss but performs badly on the test set. What is the most likely cause?",
+      options:[
+        "Overfitting",
+        "Underfitting",
+        "The learning rate is too high",
+        "There are too few features in the dataset"
+      ],
+      correct:0,
+      right:"Correct. Low training loss together with poor test performance is the classic sign of overfitting: the model has learned the training data too closely and does not generalise. Dropout, regularization, or early stopping can help.",
+      wrong:"This pattern points to overfitting. Underfitting would show high training loss too. A learning rate that is too high usually makes training unstable rather than giving very low training loss, and too few features tends to hurt training performance as well." },
+
+    { topic:"nn", type:"multi",
+      q:"Which of these help reduce overfitting?",
+      options:[
+        { t:"Dropout", correct:true, why:"Dropout randomly switches off units during training, so the model cannot lean too heavily on any single feature." },
+        { t:"Regularization", correct:true, why:"Regularization penalises overly complex models, nudging them toward simpler patterns that generalise better." },
+        { t:"Early stopping", correct:true, why:"Early stopping ends training once validation performance stops improving, before the model starts memorising the training data." },
+        { t:"Training for many more epochs until the training loss reaches zero", correct:false, why:"Training longer until the loss hits zero usually makes overfitting worse, not better, because the model memorises the training data even more closely." }
+      ] },
+
+    { topic:"xfmr", type:"single",
+      q:"What does the attention mechanism let a model do?",
+      options:[
+        "Weigh how relevant the other tokens are when building the representation of a given token",
+        "Process each token completely on its own, ignoring the other tokens",
+        "Squeeze the whole input into a single fixed-size vector before processing it",
+        "Reorder the tokens by frequency before making a prediction"
+      ],
+      correct:0,
+      right:"Correct. Self-attention lets each token look at the others and weigh how relevant each one is, producing a representation that reflects the whole context. This is how transformers build contextual meaning.",
+      wrong:"Attention is about weighing the relevance of other tokens for each token. Option B is the opposite of attention, and option C describes the fixed-vector bottleneck of older sequence models that attention was designed to overcome." },
+
+    { topic:"xfmr", type:"multi",
+      q:"Which of these are components of a transformer?",
+      options:[
+        { t:"Positional embeddings", correct:true, why:"Because attention has no built-in sense of order, positional embeddings tell the model where each token sits in the sequence." },
+        { t:"Attention with query, key, and value matrices", correct:true, why:"These three matrices are the core of the attention mechanism, deciding how tokens attend to one another." },
+        { t:"Layer normalization", correct:true, why:"Layer normalization keeps the values flowing through the network stable, which helps training. Skip connections and a feed-forward (MLP) block are also part of the architecture." },
+        { t:"Recurrent (LSTM) cells that read tokens one at a time", correct:false, why:"Transformers deliberately removed recurrence. Instead of stepping through tokens one by one like an LSTM, they process all tokens in parallel using attention." }
+      ] },
+
+    { topic:"xfmr", type:"tf",
+      q:"A transformer can attend to an unlimited amount of text at once, with no size limit.",
+      correct:false,
+      feedback:"False. Every transformer has a fixed context window, and the cost of attention grows with the square of the sequence length. That quadratic scaling is why very long inputs are expensive and why the context window has a practical limit." },
+
+    { topic:"xfmr", type:"single",
+      q:"In the attention mechanism, the three learned matrices are called...",
+      options:[
+        "Query, Key, and Value",
+        "Input, Forget, and Output",
+        "Encoder, Decoder, and Embedding",
+        "Mean, Variance, and Scale"
+      ],
+      correct:0,
+      right:"Correct. Each token produces a query, a key, and a value. Comparing queries with keys decides how much of each token's value is mixed into the result.",
+      wrong:"The three are Query, Key, and Value. Input, Forget, and Output are the gates of an LSTM, Encoder and Decoder are larger transformer blocks rather than the attention matrices, and Mean and Variance belong to layer normalization." },
+
+    { topic:"gpu", type:"single",
+      q:"Why are GPUs so well suited to training neural networks?",
+      options:[
+        "They can perform many matrix multiplications in parallel",
+        "They run each individual instruction much faster than a CPU does",
+        "They keep the entire dataset in memory so it never needs reloading",
+        "They automatically make the model smaller so it trains faster"
+      ],
+      correct:0,
+      right:"Correct. Neural network training is mostly large matrix multiplications, and a GPU has thousands of cores that run these operations in parallel. That parallelism, not raw per-instruction speed, is what makes GPUs so much faster for this work.",
+      wrong:"GPUs win through massive parallelism: they do many matrix multiplications at once. A single GPU core is not necessarily faster than a CPU core, GPUs do not store datasets permanently, and they do not shrink the model on their own." },
+
+    { topic:"ri", type:"single",
+      q:"What is a core idea of responsible innovation when building AI systems?",
+      options:[
+        "Anticipating a technology's possible impacts and considering who it might benefit or harm",
+        "Maximising model accuracy above every other consideration",
+        "Adding an ethics review only after the system has already launched",
+        "Leaving social and ethical questions entirely to policymakers"
+      ],
+      correct:0,
+      right:"Correct. Responsible innovation means thinking ahead about a system's impacts, both good and bad, and considering the people and communities affected, so issues can be addressed early in the design.",
+      wrong:"Responsible innovation is about anticipating impacts and asking who benefits and who could be harmed. Chasing accuracy alone, bolting on ethics after launch, or leaving these questions only to policymakers all miss the point of building responsibly from the start." },
+
+    { topic:"ri", type:"multi",
+      q:"Which of these are part of innovating responsibly with AI?",
+      options:[
+        { t:"Considering the perspectives of the different stakeholders and communities a system affects", correct:true, why:"Listening to and mapping the people a system touches is central to building it responsibly." },
+        { t:"Anticipating both the benefits and the risks of a system", correct:true, why:"Thinking through a range of outcomes, positive and negative, helps you design systems that are sensitive to their context." },
+        { t:"Reflecting on environmental and resource impacts such as energy, water, and minerals", correct:true, why:"AI systems consume real resources, so their environmental footprint is part of responsible design, especially where those burdens fall unevenly." },
+        { t:"Prioritising fast deployment over engaging the affected communities", correct:false, why:"Speed should not come at the expense of engaging the people a system affects. Rushing past that engagement is a common pitfall, not responsible practice." }
+      ] }
+  ];
+
+  var TOTAL = QUESTIONS.length;
+  var STORE_KEY = "arf.quiz.v1";
+  var SOUND_KEY = "arf.quiz.sound";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var intro = $("quiz-intro"), run = $("quiz-run"), results = $("quiz-results"), review = $("quiz-review");
+  var qCard = $("question-card"), counter = $("q-counter"), topicEl = $("q-topic");
+  var progressFill = $("progress-fill");
+  var primaryBtn = $("primary-btn");
+  var soundToggle = $("sound-toggle");
+
+  var idx = 0, responses = [], score = 0, locked = false, primaryMode = null;
+  var reviewIdx = 0;
+
+  // ---------- Storage ----------
+  function loadStats() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { return {}; }
+  }
+  function saveStats(s) { try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch (e) {} }
+  function loadSound() {
+    try { var v = localStorage.getItem(SOUND_KEY); return v === null ? true : v === "on"; } catch (e) { return true; }
+  }
+  function saveSound(on) { try { localStorage.setItem(SOUND_KEY, on ? "on" : "off"); } catch (e) {} }
+
+  // ---------- Sound ----------
+  var soundOn = loadSound();
+  var actx = null, audioReady = false;
+  function ensureAudio() {
+    if (actx) return;
+    try { var AC = window.AudioContext || window.webkitAudioContext; if (AC) actx = new AC(); } catch (e) { actx = null; }
+  }
+  // Mobile browsers need the audio context unlocked inside a user gesture.
+  // Unlock on the first touch/click anywhere, and keep it warm on later taps.
+  function unlockAudio() {
+    ensureAudio();
+    if (!actx) return;
+    if (actx.state === "suspended") actx.resume();
+    if (!audioReady) {
+      audioReady = true;
+      try {
+        var b = actx.createBuffer(1, 1, 22050), s = actx.createBufferSource();
+        s.buffer = b; s.connect(actx.destination); s.start(0);
+      } catch (e) {}
+    }
+  }
+  ["pointerdown", "touchend", "click"].forEach(function (ev) {
+    document.addEventListener(ev, unlockAudio, { passive: true });
+  });
+  function tone(freq, start, dur, type, vol) {
+    if (!actx) return;
+    var o = actx.createOscillator(), g = actx.createGain();
+    o.type = type || "sine"; o.frequency.value = freq;
+    var t0 = actx.currentTime + start;
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(vol || 0.18, t0 + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(actx.destination);
+    o.start(t0); o.stop(t0 + dur + 0.02);
+  }
+  function sfx(name) {
+    if (!soundOn || !actx) return;
+    if (actx.state === "suspended") actx.resume();
+    if (name === "correct") { tone(587.33, 0, 0.14, "sine", 0.18); tone(880, 0.1, 0.22, "sine", 0.18); }
+    else if (name === "wrong") { tone(196, 0, 0.16, "sawtooth", 0.12); tone(155.56, 0.12, 0.24, "sawtooth", 0.10); }
+    else if (name === "tick") { tone(420, 0, 0.05, "triangle", 0.06); }
+    else if (name === "finish") { tone(523.25, 0, 0.12, "sine", 0.16); tone(659.25, 0.12, 0.12, "sine", 0.16); tone(783.99, 0.24, 0.12, "sine", 0.16); tone(1046.5, 0.36, 0.3, "sine", 0.18); }
+  }
+  function reflectSound() {
+    soundToggle.setAttribute("aria-pressed", soundOn ? "true" : "false");
+    soundToggle.setAttribute("aria-label", soundOn ? "Turn sound off" : "Turn sound on");
+    soundToggle.classList.toggle("is-off", !soundOn);
+  }
+  soundToggle.addEventListener("click", function () {
+    soundOn = !soundOn; saveSound(soundOn); reflectSound();
+    if (soundOn) { ensureAudio(); sfx("tick"); }
+  });
+  reflectSound();
+
+  // ---------- Helpers ----------
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function letter(i) { return ["A", "B", "C", "D", "E"][i]; }
+  function reviewLink(topic) {
+    var r = REVIEW[topic];
+    return '<a class="topic-review" href="' + r.url + '" target="_blank" rel="noopener">Review: ' + esc(r.label) + ' &rsaquo;</a>';
+  }
+
+  // ---------- Intro ----------
+  function renderIntro() {
+    var s = loadStats();
+    var best = s.best || 0;
+    var bestBar = $("best-bar"), note = $("attempts-note"), chip = $("best-chip");
+    if (s.attempts) {
+      chip.hidden = false;
+      chip.querySelector("strong").textContent = best + "%";
+      note.hidden = false;
+      note.textContent = "You have taken this " + s.attempts + (s.attempts === 1 ? " time" : " times") + ". Last score: " + (s.last || 0) + "%.";
+      $("start-label").textContent = "Take it again";
+    }
+    bestBar.style.width = best + "%";
+  }
+
+  // ---------- Runner ----------
+  function setPrimary(mode, label) {
+    primaryMode = mode;
+    primaryBtn.hidden = false;
+    primaryBtn.textContent = label;
+  }
+
+  function renderQuestion() {
+    locked = false;
+    var qd = QUESTIONS[idx];
+    counter.textContent = "Question " + (idx + 1) + " of " + TOTAL;
+    topicEl.textContent = TOPICS[qd.topic];
+    progressFill.style.width = (idx / TOTAL * 100) + "%";
+    qCard.innerHTML = questionHTML(qd);
+
+    var btns = qCard.querySelectorAll(".opt");
+    for (var b = 0; b < btns.length; b++) btns[b].addEventListener("click", onOptionClick);
+
+    if (qd.type === "multi") setPrimary("submit", "Submit answer");
+    else { primaryBtn.hidden = true; primaryMode = null; }
+
+    qCard.classList.remove("card-in"); void qCard.offsetWidth; qCard.classList.add("card-in");
+  }
+
+  function questionHTML(qd) {
+    var typeLabel = qd.type === "multi" ? "Select all that apply" : (qd.type === "tf" ? "True or false" : "Choose one");
+    var html = '<p class="q-type">' + typeLabel + '</p>';
+    html += '<p class="q-text">' + esc(qd.q) + '</p>';
+    if (qd.code) html += '<pre class="q-code"><code>' + esc(qd.code) + '</code></pre>';
+    html += '<div class="quiz-options" role="group">';
+    if (qd.type === "tf") { html += optBtn(0, "True"); html += optBtn(1, "False"); }
+    else {
+      for (var i = 0; i < qd.options.length; i++) {
+        html += optBtn(i, qd.type === "multi" ? qd.options[i].t : qd.options[i]);
+      }
+    }
+    html += '</div>';
+    html += '<div class="quiz-feedback" id="feedback" hidden></div>';
+    return html;
+  }
+
+  function optBtn(i, label) {
+    return '<button class="opt" type="button" data-i="' + i + '" aria-pressed="false">' +
+      '<span class="opt-mark" aria-hidden="true">' + letter(i) + '</span>' +
+      '<span class="opt-text">' + esc(label) + '</span></button>';
+  }
+
+  function onOptionClick(e) {
+    if (locked) return;
+    var qd = QUESTIONS[idx], btn = e.currentTarget;
+    if (qd.type === "multi") {
+      var pressed = btn.getAttribute("aria-pressed") === "true";
+      btn.setAttribute("aria-pressed", pressed ? "false" : "true");
+      btn.classList.toggle("selected", !pressed);
+      sfx("tick");
+    } else {
+      lockSingle(parseInt(btn.getAttribute("data-i"), 10));
+    }
+  }
+
+  function lockSingle(chosen) {
+    locked = true;
+    var qd = QUESTIONS[idx];
+    var correctIdx = qd.type === "tf" ? (qd.correct ? 0 : 1) : qd.correct;
+    var isCorrect = chosen === correctIdx;
+    responses[idx] = { isCorrect: isCorrect, chosen: chosen };
+    if (isCorrect) score++;
+    var btns = qCard.querySelectorAll(".opt");
+    for (var i = 0; i < btns.length; i++) {
+      var bi = parseInt(btns[i].getAttribute("data-i"), 10);
+      btns[i].disabled = true;
+      if (bi === correctIdx) btns[i].classList.add("correct");
+      else if (bi === chosen) btns[i].classList.add("wrong");
+    }
+    showFeedback(isCorrect, qd.type === "tf" ? qd.feedback : (isCorrect ? qd.right : qd.wrong), null);
+    sfx(isCorrect ? "correct" : "wrong");
+    afterLock();
+  }
+
+  function lockMulti() {
+    locked = true;
+    var qd = QUESTIONS[idx];
+    var btns = qCard.querySelectorAll(".opt");
+    var chosenSet = [], isCorrect = true;
+    for (var i = 0; i < btns.length; i++) {
+      var picked = btns[i].getAttribute("aria-pressed") === "true";
+      var opt = qd.options[i];
+      if (picked) chosenSet.push(i);
+      if (picked !== opt.correct) isCorrect = false;
+      btns[i].disabled = true; btns[i].classList.remove("selected");
+      if (opt.correct && picked) btns[i].classList.add("correct");
+      else if (!opt.correct && picked) btns[i].classList.add("wrong");
+      else if (opt.correct && !picked) btns[i].classList.add("missed");
+    }
+    responses[idx] = { isCorrect: isCorrect, chosenSet: chosenSet };
+    if (isCorrect) score++;
+    var whys = "";
+    for (var j = 0; j < qd.options.length; j++) {
+      var o = qd.options[j];
+      whys += '<li class="' + (o.correct ? "y" : "n") + '"><span class="why-mark">' + (o.correct ? "✓" : "✗") + '</span><span>' + esc(o.t) + ": " + esc(o.why) + '</span></li>';
+    }
+    showFeedback(isCorrect, isCorrect ? "Nicely done." : "Not quite. Here is the breakdown:", whys);
+    sfx(isCorrect ? "correct" : "wrong");
+    afterLock();
+  }
+
+  function showFeedback(isCorrect, text, whysHtml) {
+    var fb = $("feedback");
+    fb.hidden = false;
+    fb.className = "quiz-feedback " + (isCorrect ? "ok" : "no");
+    var html = '<p class="fb-head">' + (isCorrect ? "✓ Correct" : "✗ Not quite") + '</p><p class="fb-body">' + esc(text) + "</p>";
+    if (whysHtml) html += '<ul class="quiz-whys">' + whysHtml + "</ul>";
+    fb.innerHTML = html;
+  }
+
+  function afterLock() {
+    progressFill.style.width = ((idx + 1) / TOTAL * 100) + "%";
+    setPrimary("next", idx === TOTAL - 1 ? "See results" : "Next");
+    primaryBtn.focus();
+  }
+
+  primaryBtn.addEventListener("click", function () {
+    if (primaryMode === "submit") {
+      if (!qCard.querySelector('.opt[aria-pressed="true"]')) {
+        sfx("tick"); primaryBtn.classList.add("nudge");
+        setTimeout(function () { primaryBtn.classList.remove("nudge"); }, 320);
+        return;
+      }
+      lockMulti();
+    } else if (primaryMode === "next") {
+      sfx("tick");
+      if (idx === TOTAL - 1) { finish(); return; }
+      idx++; renderQuestion();
+      run.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+
+  // ---------- Results ----------
+  function bandFor(pct) {
+    if (pct >= 85) return { key: "ready",   emoji: "🚀", title: "Ready to roll",     msg: "You are well prepared. Skim anything you missed and you are set for the week." };
+    if (pct >= 60) return { key: "almost",  emoji: "💪", title: "Almost there",      msg: "Solid foundation. Revisit the topics flagged below before the workshop." };
+    return            { key: "refresh", emoji: "📚", title: "Worth a refresher", msg: "No worries, that is exactly what the pre-work is for. Focus on the topics below." };
+  }
+
+  function finish() {
+    var pct = Math.round(score / TOTAL * 100);
+    var s = loadStats();
+    var prevAttempts = s.attempts || 0;
+    var prevBest = (typeof s.best === "number") ? s.best : 0;
+    s.attempts = prevAttempts + 1;
+    s.last = pct;
+    s.best = Math.max(prevBest, pct);
+    saveStats(s);
+
+    var band = bandFor(pct);
+    $("band").className = "band band-" + band.key;
+    $("band").innerHTML = '<span class="band-emoji">' + band.emoji + '</span><span class="band-title">' + band.title + '</span><span class="band-msg">' + band.msg + '</span>';
+    $("score-raw").textContent = score + " of " + TOTAL;
+
+    var bestLine;
+    if (prevAttempts === 0) bestLine = "Your first attempt. Nice work getting started.";
+    else if (pct > prevBest) bestLine = "New personal best, up from " + prevBest + "%.";
+    else if (pct === prevBest) bestLine = "You matched your best of " + s.best + "%.";
+    else bestLine = "Your best so far is " + s.best + "%. Attempt " + s.attempts + ".";
+    $("best-line").textContent = bestLine;
+
+    var tally = {};
+    for (var i = 0; i < QUESTIONS.length; i++) {
+      var k = QUESTIONS[i].topic;
+      if (!tally[k]) tally[k] = { c: 0, n: 0 };
+      tally[k].n++;
+      if (responses[i] && responses[i].isCorrect) tally[k].c++;
+    }
+    var tb = "";
+    for (var key in TOPICS) {
+      if (!tally[key]) continue;
+      var t = tally[key], p = Math.round(t.c / t.n * 100), weak = p < 100;
+      tb += '<div class="topic-row">' +
+        '<div class="topic-line"><span class="topic-name">' + esc(TOPICS[key]) + '</span><span class="topic-score">' + t.c + "/" + t.n + '</span></div>' +
+        '<div class="topic-bar"><span style="width:' + p + '%"></span></div>' +
+        (weak ? reviewLink(key) : '<span class="topic-done">Nailed it ✓</span>') + '</div>';
+    }
+    $("topic-breakdown").innerHTML = tb;
+
+    run.hidden = true; review.hidden = true; results.hidden = false;
+    sfx("finish");
+    animateScore(pct);
+    results.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function animateScore(target) {
+    var el = $("score-pct");
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) { el.textContent = target + "%"; return; }
+    var cur = 0, step = Math.max(1, Math.round(target / 30));
+    var timer = setInterval(function () {
+      cur += step; if (cur >= target) { cur = target; clearInterval(timer); }
+      el.textContent = cur + "%";
+    }, 24);
+  }
+
+  // ---------- Review (step-through) ----------
+  function enterReview() {
+    reviewIdx = 0;
+    results.hidden = true; run.hidden = true; intro.hidden = true;
+    review.hidden = false;
+    renderReview();
+    review.scrollIntoView({ behavior: "smooth", block: "start" });
+    sfx("tick");
+  }
+
+  function renderReview() {
+    var qd = QUESTIONS[reviewIdx], r = responses[reviewIdx] || {};
+    $("rev-counter").textContent = "Reviewing " + (reviewIdx + 1) + " of " + TOTAL + " · " + TOPICS[qd.topic];
+    $("rev-progress").style.width = ((reviewIdx + 1) / TOTAL * 100) + "%";
+
+    var typeLabel = qd.type === "multi" ? "Select all that apply" : (qd.type === "tf" ? "True or false" : "Choose one");
+    var html = '<div class="rev-status ' + (r.isCorrect ? "ok" : "no") + '">' + (r.isCorrect ? "✓ You got this right" : "✗ You missed this one") + '</div>';
+    html += '<p class="q-type">' + typeLabel + '</p>';
+    html += '<p class="q-text">' + esc(qd.q) + '</p>';
+    if (qd.code) html += '<pre class="q-code"><code>' + esc(qd.code) + '</code></pre>';
+    html += '<div class="quiz-options">';
+
+    if (qd.type === "multi") {
+      for (var i = 0; i < qd.options.length; i++) {
+        var o = qd.options[i];
+        var picked = r.chosenSet && r.chosenSet.indexOf(i) !== -1;
+        var cls = "", tag = "";
+        if (o.correct && picked) { cls = "correct"; tag = "You chose ✓"; }
+        else if (o.correct && !picked) { cls = "missed"; tag = "Correct answer"; }
+        else if (!o.correct && picked) { cls = "wrong"; tag = "You chose ✗"; }
+        html += revOpt(i, o.t, cls, tag);
+      }
+    } else {
+      var correctIdx = qd.type === "tf" ? (qd.correct ? 0 : 1) : qd.correct;
+      var opts = qd.type === "tf" ? ["True", "False"] : qd.options;
+      for (var j = 0; j < opts.length; j++) {
+        var c2 = "", tag2 = "";
+        if (j === correctIdx) { c2 = "correct"; tag2 = (j === r.chosen) ? "Your answer ✓" : "Correct answer"; }
+        else if (j === r.chosen) { c2 = "wrong"; tag2 = "Your answer ✗"; }
+        html += revOpt(j, opts[j], c2, tag2);
+      }
+    }
+    html += '</div>';
+
+    html += '<div class="quiz-feedback ' + (r.isCorrect ? "ok" : "no") + '">';
+    if (qd.type === "multi") {
+      html += '<p class="fb-head">Why each option</p><ul class="quiz-whys">';
+      for (var k = 0; k < qd.options.length; k++) {
+        var oo = qd.options[k];
+        html += '<li class="' + (oo.correct ? "y" : "n") + '"><span class="why-mark">' + (oo.correct ? "✓" : "✗") + '</span><span>' + esc(oo.t) + ": " + esc(oo.why) + '</span></li>';
+      }
+      html += '</ul>';
+    } else {
+      var fbText = qd.type === "tf" ? qd.feedback : (r.isCorrect ? qd.right : qd.wrong);
+      html += '<p class="fb-body">' + esc(fbText) + '</p>';
+    }
+    html += reviewLink(qd.topic) + '</div>';
+
+    var rc = $("review-card");
+    rc.innerHTML = html;
+    rc.classList.remove("card-in"); void rc.offsetWidth; rc.classList.add("card-in");
+
+    $("rev-prev").disabled = reviewIdx === 0;
+    $("rev-next").textContent = reviewIdx === TOTAL - 1 ? "Back to results" : "Next ›";
+  }
+
+  function revOpt(i, label, cls, tag) {
+    return '<div class="opt ' + cls + '" aria-disabled="true"><span class="opt-mark" aria-hidden="true">' + letter(i) + '</span>' +
+      '<span class="opt-text">' + esc(label) + (tag ? ' <span class="opt-tag">' + esc(tag) + '</span>' : "") + '</span></div>';
+  }
+
+  $("rev-prev").addEventListener("click", function () { if (reviewIdx > 0) { reviewIdx--; sfx("tick"); renderReview(); review.scrollIntoView({behavior:"smooth",block:"start"}); } });
+  $("rev-next").addEventListener("click", function () {
+    sfx("tick");
+    if (reviewIdx === TOTAL - 1) { backToResults(); return; }
+    reviewIdx++; renderReview(); review.scrollIntoView({behavior:"smooth",block:"start"});
+  });
+  $("rev-back").addEventListener("click", backToResults);
+  function backToResults() { review.hidden = true; results.hidden = false; results.scrollIntoView({behavior:"smooth",block:"start"}); }
+
+  // ---------- Start / retake ----------
+  function startQuiz() {
+    ensureAudio();
+    if (soundOn && actx && actx.state === "suspended") actx.resume();
+    idx = 0; score = 0; responses = []; locked = false;
+    intro.hidden = true; results.hidden = true; review.hidden = true;
+    run.hidden = false;
+    renderQuestion();
+    run.scrollIntoView({ behavior: "smooth", block: "start" });
+    sfx("tick");
+  }
+
+  $("start-btn").addEventListener("click", startQuiz);
+  $("retake-btn").addEventListener("click", startQuiz);
+  $("review-btn").addEventListener("click", enterReview);
+
+  // ---------- Init ----------
+  renderIntro();
+})();
+</script>
+{{ end }}

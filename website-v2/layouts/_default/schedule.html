@@ -1,0 +1,66 @@
+{{ define "main" }}
+<article class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
+  <h1>{{ .Title }}</h1>
+  <div class="prose" style="margin: 0 0 1.5rem; padding: 0; max-width: none;">
+    {{ .Content }}
+  </div>
+
+  <div class="legend">
+    {{- range .Params.legend }}
+    <span class="legend-item"><span class="legend-swatch swatch-{{ .cat }}"></span>{{ .label }}</span>
+    {{- end }}
+  </div>
+
+  <!-- Day-by-day accordions -->
+  <div class="day-accordions">
+    {{- range $i, $d := .Params.days }}
+    <details class="day-acc" data-theme="{{ $d.slug }}">
+      <summary class="day-acc-summary">
+        <span class="day-acc-day">{{ $d.day }} <span class="day-acc-date">{{ $d.date }}</span></span>
+        <span class="day-acc-title">{{ $d.title }}</span>
+        <svg class="day-acc-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="day-acc-body">
+        <ul class="sess-list">
+          {{- range $d.sessions }}
+          <li class="sess-row">
+            <span class="legend-swatch swatch-{{ .cat }}"></span>
+            <span class="sess-row-time">{{ .start }}&ndash;{{ .end }}</span>
+            <span class="sess-row-name">{{ .name }}</span>
+          </li>
+          {{- end }}
+          {{- with $d.after }}
+          <li class="sess-row sess-row--after">
+            <span class="legend-swatch swatch-social"></span>
+            <span class="sess-row-time">{{ $d.afterTime }}</span>
+            <span class="sess-row-name">{{ . }} <em>· after hours</em></span>
+          </li>
+          {{- end }}
+        </ul>
+      </div>
+    </details>
+    {{- end }}
+  </div>
+
+  <!-- Live Google Calendar -->
+  <section class="cal-embed-section">
+    <h2>Live calendar</h2>
+    <p class="cal-embed-lead">View the full timetable below. Times are shown in South Africa Standard Time (SAST).</p>
+    {{- with .Params.calendarAddUrl }}
+    <a class="btn cal-add-btn" href="{{ . }}" target="_blank" rel="noopener">
+      {{ partial "icon.html" "calendar" }} Add to your calendar
+    </a>
+    {{- end }}
+    {{- with .Params.calendarSrc }}
+    <div class="cal-embed">
+      <iframe src="{{ . }}" title="Workshop Google Calendar" width="100%" height="650" frameborder="0" scrolling="no"></iframe>
+    </div>
+    {{- else }}
+    <div class="cal-embed-placeholder">
+      <p><strong>Google Calendar embed will appear here.</strong></p>
+      <p>Add the calendar's public embed URL as <code>calendarSrc</code> in <code>content/schedule.md</code>. In Google Calendar open Settings &rsaquo; your calendar &rsaquo; Integrate calendar, then copy the <code>src</code> URL from the Embed code.</p>
+    </div>
+    {{- end }}
+  </section>
+</article>
+{{ end }}

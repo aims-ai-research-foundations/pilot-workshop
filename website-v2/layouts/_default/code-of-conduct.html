@@ -1,0 +1,23 @@
+{{ define "main" }}
+<article class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
+  <h1>{{ .Title }}</h1>
+  <div class="prose" style="margin: 0 0 1rem; padding: 0; max-width: none;">
+    {{ .Content }}
+  </div>
+
+  <div class="principles fade-in-stagger">
+    {{- range .Params.principles }}
+    <article class="principle-card">
+      <div class="principle-icon-wrap">{{ partial "icon.html" .icon }}</div>
+      <h3>{{ .title }}</h3>
+      <p>{{ .body }}</p>
+    </article>
+    {{- end }}
+  </div>
+
+  <div class="role-callout">
+    <h3>We all have a role to play.</h3>
+    <p>If you experience or witness behaviour that goes against this Code of Conduct, please speak with a member of the workshop team. We will address concerns promptly and respectfully, or email <a href="mailto:{{ .Site.Params.contactEmail }}" style="color: white; text-decoration: underline;">{{ .Site.Params.contactEmail }}</a>.</p>
+  </div>
+</article>
+{{ end }}

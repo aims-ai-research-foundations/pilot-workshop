@@ -1,0 +1,29 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-cta">
+      <div>
+        <h3>Questions about the workshop?</h3>
+        <p>We're here to support you before, during, and after.</p>
+        <a class="email" href="mailto:{{ .Site.Params.contactEmail }}">{{ .Site.Params.contactEmail }}</a>
+      </div>
+      <a class="btn btn-pulse" href="mailto:{{ .Site.Params.contactEmail }}">Reach out to the team</a>
+    </div>
+    <div class="footer-utility">
+      <div class="footer-logos">
+        {{- range where .Site.Params.partners "group" "partner" }}
+        <img src="{{ .image | relURL }}" alt="{{ .name }}" loading="lazy">
+        {{- end }}
+        <span class="footer-logos-divider" aria-hidden="true">·</span>
+        <span class="footer-logos-label">Supported by</span>
+        {{- range where .Site.Params.partners "group" "supporter" }}
+        <img src="{{ .image | relURL }}" alt="{{ .name }}" loading="lazy">
+        {{- end }}
+      </div>
+      <div class="footer-links">
+        {{ with .Site.GetPage "/code-of-conduct" }}<a href="{{ .RelPermalink }}">Code of Conduct</a>{{ end }}
+        <a href="{{ .Site.Params.repoURL }}/blob/main/LICENSE">Licence (CC BY 4.0)</a>
+        <span>© 2026 AIMS South Africa</span>
+      </div>
+    </div>
+  </div>
+</footer>

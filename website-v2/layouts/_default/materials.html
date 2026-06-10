@@ -1,0 +1,23 @@
+{{ define "main" }}
+<article class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
+  <h1>{{ .Title }}</h1>
+  <div class="prose" style="margin: 0 0 2rem; padding: 0; max-width: none;">
+    {{ .Content }}
+  </div>
+
+  {{- range .Params.days }}
+  <details class="day-details">
+    <summary>{{ .day }} · {{ .date }} · {{ .title }}</summary>
+    <div class="content">
+      <p class="materials-meta">Sessions with materials</p>
+      <ul>
+        {{- range .activities }}
+        <li>{{ . }}</li>
+        {{- end }}
+      </ul>
+      <span class="wip-badge">Work in progress</span>
+    </div>
+  </details>
+  {{- end }}
+</article>
+{{ end }}

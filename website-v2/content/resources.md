@@ -1,0 +1,34 @@
+---
+title: "Resources"
+layout: "resources"
+resources:
+  - title: "AI Research Foundations on Google Skills"
+    description: "Eight courses, 5–7 hours each. Step-by-step content, videos, and responsible-innovation activities."
+    url: "https://skills.google/paths/3135"
+    linkLabel: "Open on Google Skills"
+  - title: "Course Labs on GitHub"
+    description: "40+ Jupyter notebooks, Colab-ready. Openly licensed under Apache 2.0 and CC BY 4.0."
+    url: "https://github.com/aims-ai-research-foundations"
+    linkLabel: "Open on GitHub"
+  - title: "Welcome Kit"
+    description: "Attendee Welcome Kit: schedule, pre-work, what to bring, team contacts."
+    url: "https://aims.ac.za"
+    linkLabel: "Download"
+  - title: "Communication Pack"
+    description: "Full programme details: eligible institutions, grant funding, course structure, and FAQs."
+    url: "https://drive.google.com/file/d/1OLu1pMmw7m7N067385xoPfhvY_LyX3FF/view?usp=sharing"
+    linkLabel: "Open"
+  - title: "Lecturer Toolkit"
+    description: "Slide decks, activity guides, and assessment rubrics for blended pedagogy."
+    wip: true
+  - title: "Workshop Materials (GitHub)"
+    description: "Slides, notebooks, AI / RI activities, assignments, and references for each day."
+    url: "https://github.com/aims-ai-research-foundations/pilot-workshop"
+    linkLabel: "Open GitHub Repository"
+  - title: "Programme contact"
+    description: "Questions about logistics, access, or the programme itself? Reach out anytime."
+    url: "mailto:ai-research-foundations@aims.ac.za"
+    linkLabel: "Email the team"
+---
+
+Everything you need for the workshop, in one place. Links open in a new tab.

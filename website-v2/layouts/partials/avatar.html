@@ -1,0 +1,7 @@
+{{- $name := . -}}
+{{- $parts := split $name " " -}}
+{{- $initials := "" -}}
+{{- range first 2 $parts -}}
+{{- $initials = printf "%s%s" $initials (substr . 0 1) -}}
+{{- end -}}
+<div class="avatar" aria-hidden="true">{{ $initials | upper }}</div>

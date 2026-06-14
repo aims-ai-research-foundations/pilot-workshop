@@ -25,15 +25,15 @@ days:
     sessions:
       - { start: "09:00", end: "09:30", name: "Registration & Welcoming", cat: "social" }
       - { start: "09:30", end: "10:00", name: "AI Trainer Bingo", cat: "social" }
-      - { start: "10:00", end: "10:45", name: "Workshop Overview", cat: "social" }
-      - { start: "10:45", end: "11:15", name: "Introduce Pedagogical Concept", cat: "collab" }
+      - { start: "10:00", end: "10:15", name: "Workshop Overview", cat: "social" }
+      - { start: "10:15", end: "11:15", name: "Course 2 Technical Lecture", cat: "lecture"}
       - { start: "11:15", end: "12:00", name: "Coffee break", cat: "break" }
-      - { start: "12:00", end: "13:00", name: "Course 2 Technical Lecture", cat: "lecture" }
+      - { start: "12:00", end: "12:30", name: "Introduce Pedagogical Concept", cat: "collab" }
+      - { start: "12:30", end: "13:00", name: "AI vs RI Activities", cat: "collab" }
       - { start: "13:00", end: "14:00", name: "Lunch", cat: "break" }
-      - { start: "14:00", end: "14:30", name: "AI vs RI Activities", cat: "collab" }
-      - { start: "14:30", end: "15:30", name: "Toolkit Activity Walkthrough", cat: "collab" }
-      - { start: "15:30", end: "16:00", name: "Coffee break", cat: "break" }
-      - { start: "16:00", end: "17:00", name: "Explain It Back", cat: "lecture" }
+      - { start: "14:00", end: "15:00", name: "Toolkit Activity Walkthrough", cat: "collab" }
+      - { start: "15:00", end: "15:30", name: "Coffee break", cat: "break" }
+      - { start: "15:30", end: "16:30", name: "Explain It Back", cat: "lecture" }
   - day: "Tuesday"
     date: "16 Jun"
     title: "Teaching for Africa"

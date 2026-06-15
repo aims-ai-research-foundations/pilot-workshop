@@ -18,7 +18,7 @@ days:
     title: "Welcome & Foundations"
     slug: "foundations"
     after: "Social · Fact Cards"
-    afterTime: "19:30–20:30"
+    afterTime: "19:00–20:00"
     sessions:
       - { start: "09:00", end: "09:30", name: "Registration & Welcoming", cat: "social" }
       - { start: "09:30", end: "10:00", name: "AI Trainer Bingo", cat: "social" }

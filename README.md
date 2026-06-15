@@ -35,38 +35,99 @@ Materials are split by type so each tool is used for what it does best:
 
 ## Schedule
 
-<details>
-<summary><strong>Day 1 - Monday, 15 June 2026</strong></summary>
+Five days blending technical lectures, hands-on sessions, peer teaching, and social activities, weaving through four threads: learn, teach, adapt, connect. Times are in South Africa Standard Time (SAST).
 
-TBD
+> **This schedule is tentative.** Times and sessions may shift; the final timetable will be confirmed closer to the workshop. The live, interactive version is on the [Schedule page](https://aims-ai-research-foundations.github.io/pilot-workshop/schedule/).
+
+<details>
+<summary><strong>Day 1 - Monday, 15 June 2026 - Welcome & Foundations</strong></summary>
+
+| Time | Session |
+|------|---------|
+| 09:00-09:30 | Registration & Welcoming |
+| 09:30-10:00 | AI Trainer Bingo |
+| 10:00-10:15 | Workshop Overview |
+| 10:15-11:15 | Course 2 Technical Lecture |
+| 11:15-12:00 | Coffee break |
+| 12:00-12:30 | Introduce Pedagogical Concept |
+| 12:30-13:00 | AI vs RI Activities |
+| 13:00-14:00 | Lunch |
+| 14:00-15:00 | Toolkit Activity Walkthrough |
+| 15:00-15:30 | Coffee break |
+| 15:30-16:30 | Explain It Back |
+| 19:30-20:30 | Social: Fact Cards (evening) |
 
 </details>
 
 <details>
-<summary><strong>Day 2 - Tuesday, 16 June 2026</strong></summary>
+<summary><strong>Day 2 - Tuesday, 16 June 2026 - Teaching for Africa</strong></summary>
 
-TBD
-
-</details>
-
-<details>
-<summary><strong>Day 3 - Wednesday, 17 June 2026</strong></summary>
-
-TBD
-
-</details>
-
-<details>
-<summary><strong>Day 4 - Thursday, 18 June 2026</strong></summary>
-
-TBD
+| Time | Session |
+|------|---------|
+| 10:00-10:30 | Social: Africa Quiz |
+| 10:30-11:30 | Course 3 Technical Lecture |
+| 11:30-12:00 | Coffee break |
+| 12:00-13:00 | Contextualize for Africa |
+| 13:00-14:00 | Lunch |
+| 14:00-15:00 | Guest session (DeepMind) |
+| 15:00-15:30 | Toolkit Activity Walkthrough |
+| 15:30-16:00 | Coffee break |
+| 16:00-17:00 | Explain It Back |
+| 19:30-21:30 | Movie Night (evening) |
 
 </details>
 
 <details>
-<summary><strong>Day 5 - Friday, 19 June 2026</strong></summary>
+<summary><strong>Day 3 - Wednesday, 17 June 2026 - Delivery & Practice</strong></summary>
 
-TBD
+| Time | Session |
+|------|---------|
+| 09:15-10:15 | Course 4 Technical Lecture |
+| 10:15-11:15 | Toolkit Activity Walkthrough |
+| 11:15-11:45 | Coffee break |
+| 11:45-13:00 | Explain It Back |
+| 13:00-14:00 | Lunch |
+| 14:00-15:00 | Slide Creation Session |
+| 15:00-15:30 | Google Skills Onboarding |
+| 15:30-16:00 | Coffee break |
+| 16:00-17:00 | Challenge Lab Walkthrough |
+| 18:00-19:00 | Social Dinner (evening) |
+
+</details>
+
+<details>
+<summary><strong>Day 4 - Thursday, 18 June 2026 - Agentic AI for Educators</strong></summary>
+
+| Time | Session |
+|------|---------|
+| 09:15-10:15 | Course 5 Technical Lecture |
+| 10:15-11:15 | Toolkit Activity Walkthrough |
+| 11:15-11:45 | Coffee break |
+| 11:45-13:00 | Explain It Back |
+| 13:00-14:00 | Lunch |
+| 14:00-14:45 | Beach Time |
+| 14:45-15:30 | Agentic AI Hands-On |
+| 15:30-16:00 | Coffee break |
+| 16:00-17:00 | Agentic AI Hands-On |
+| 19:30-20:30 | Games Night (evening) |
+
+</details>
+
+<details>
+<summary><strong>Day 5 - Friday, 19 June 2026 - Capstone & Closing</strong></summary>
+
+| Time | Session |
+|------|---------|
+| 09:15-10:15 | Course 7 Technical Lecture |
+| 10:15-11:15 | Toolkit Activity Walkthrough |
+| 11:15-11:45 | Coffee break |
+| 11:45-13:00 | Explain It Back |
+| 13:00-14:00 | Lunch |
+| 14:00-15:00 | Capstone Project Workshop |
+| 15:00-15:30 | Coffee break |
+| 15:30-16:30 | Fireside Chat |
+| 16:30-17:00 | Closing remarks |
+| 19:00-21:30 | Closing Party (evening) |
 
 </details>
 

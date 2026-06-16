@@ -48,14 +48,15 @@ Five days blending technical lectures, hands-on sessions, peer teaching, and soc
 | 09:30-10:00 | AI Trainer Bingo |
 | 10:00-10:15 | Workshop Overview |
 | 10:15-11:15 | Course 2 Technical Lecture |
-| 11:15-12:00 | Coffee break |
+| 11:15-12:00 | Coffee Break |
 | 12:00-12:30 | Introduce Pedagogical Concept |
 | 12:30-13:00 | AI vs RI Activities |
 | 13:00-14:00 | Lunch |
 | 14:00-15:00 | Toolkit Activity Walkthrough |
-| 15:00-15:30 | Coffee break |
+| 15:00-15:30 | Coffee Break |
 | 15:30-16:30 | Explain It Back |
-| 19:30-20:30 | Social: Fact Cards (evening) |
+| 17:00-19:00 | Open Lab |
+| 19:30-20:30 | Social - Fact Cards |
 
 </details>
 
@@ -64,16 +65,16 @@ Five days blending technical lectures, hands-on sessions, peer teaching, and soc
 
 | Time | Session |
 |------|---------|
-| 10:00-10:30 | Social: Africa Quiz |
+| 10:00-10:30 | Social - Africa Quiz |
 | 10:30-11:30 | Course 3 Technical Lecture |
-| 11:30-12:00 | Coffee break |
+| 11:30-12:00 | Coffee Break |
 | 12:00-13:00 | Contextualize for Africa |
 | 13:00-14:00 | Lunch |
-| 14:00-15:00 | Guest session (DeepMind) |
-| 15:00-15:30 | Toolkit Activity Walkthrough |
-| 15:30-16:00 | Coffee break |
-| 16:00-17:00 | Explain It Back |
-| 19:30-21:30 | Movie Night (evening) |
+| 14:00-15:00 | Guest Session (DeepMind) |
+| 15:00-15:30 | Explain It Back |
+| 15:30-16:00 | Coffee Break |
+| 16:00-17:00 | Toolkit Activity Walkthrough |
+| 17:00-19:00 | Open Lab |
 
 </details>
 
@@ -82,34 +83,38 @@ Five days blending technical lectures, hands-on sessions, peer teaching, and soc
 
 | Time | Session |
 |------|---------|
-| 09:15-10:15 | Course 4 Technical Lecture |
-| 10:15-11:15 | Toolkit Activity Walkthrough |
-| 11:15-11:45 | Coffee break |
-| 11:45-13:00 | Explain It Back |
+| 09:00-09:30 | Social - Spot the Slop |
+| 09:30-10:30 | Course 4 Technical Lecture |
+| 10:30-11:30 | Toolkit Activity Walkthrough |
+| 11:30-12:00 | Coffee Break |
+| 12:00-13:00 | Explain It Back |
 | 13:00-14:00 | Lunch |
 | 14:00-15:00 | Slide Creation Session |
-| 15:00-15:30 | Google Skills Onboarding |
-| 15:30-16:00 | Coffee break |
+| 15:00-15:30 | GCSB Onboarding |
+| 15:30-16:00 | Coffee Break |
 | 16:00-17:00 | Challenge Lab Walkthrough |
-| 18:00-19:00 | Social Dinner (evening) |
+| 17:00-19:00 | Open Lab |
+| 19:30-21:30 | Movie Night |
 
 </details>
 
 <details>
-<summary><strong>Day 4 - Thursday, 18 June 2026 - Agentic AI for Educators</strong></summary>
+<summary><strong>Day 4 - Thursday, 18 June 2026 - Generative AI for Educators</strong></summary>
 
 | Time | Session |
 |------|---------|
-| 09:15-10:15 | Course 5 Technical Lecture |
-| 10:15-11:15 | Toolkit Activity Walkthrough |
-| 11:15-11:45 | Coffee break |
-| 11:45-13:00 | Explain It Back |
+| 09:00-09:30 | Social - Write the Prompt |
+| 09:30-10:30 | Course 5 Technical Lecture |
+| 10:30-11:30 | Toolkit Activity Walkthrough |
+| 11:30-12:00 | Coffee Break |
+| 12:00-13:00 | Explain It Back |
 | 13:00-14:00 | Lunch |
 | 14:00-14:45 | Beach Time |
-| 14:45-15:30 | Agentic AI Hands-On |
-| 15:30-16:00 | Coffee break |
-| 16:00-17:00 | Agentic AI Hands-On |
-| 19:30-20:30 | Games Night (evening) |
+| 14:45-15:30 | Generative AI for Educators |
+| 15:30-16:00 | Coffee Break |
+| 16:00-17:00 | Generative AI for Educators |
+| 17:00-19:00 | Open Lab |
+| 19:30-20:30 | Games Night |
 
 </details>
 
@@ -118,16 +123,16 @@ Five days blending technical lectures, hands-on sessions, peer teaching, and soc
 
 | Time | Session |
 |------|---------|
-| 09:15-10:15 | Course 7 Technical Lecture |
-| 10:15-11:15 | Toolkit Activity Walkthrough |
-| 11:15-11:45 | Coffee break |
-| 11:45-13:00 | Explain It Back |
+| 09:00-09:30 | Social - What Would You Do? |
+| 09:30-10:30 | Course 7 Technical Lecture |
+| 10:30-11:30 | Toolkit Activity Walkthrough |
+| 11:30-12:00 | Coffee Break |
+| 12:00-13:00 | Explain It Back |
 | 13:00-14:00 | Lunch |
 | 14:00-15:00 | Capstone Project Workshop |
-| 15:00-15:30 | Coffee break |
+| 15:00-15:30 | Coffee Break |
 | 15:30-16:30 | Fireside Chat |
-| 16:30-17:00 | Closing remarks |
-| 19:00-21:30 | Closing Party (evening) |
+| 16:30-17:00 | Closing Remarks |
 
 </details>
 

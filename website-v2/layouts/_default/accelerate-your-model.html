@@ -380,7 +380,8 @@
     sfx(isCorrect ? "correct" : "wrong");
     progressFill.style.width = ((idx + 1) / TOTAL * 100) + "%";
     setPrimary("next", idx === TOTAL - 1 ? "See results" : "Next");
-    primaryBtn.focus();
+    primaryBtn.focus({ preventScroll: true });
+    fb.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
   primaryBtn.addEventListener("click", function () {

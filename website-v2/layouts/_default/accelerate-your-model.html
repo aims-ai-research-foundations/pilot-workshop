@@ -1,0 +1,493 @@
+{{ define "main" }}
+<article class="container quiz-page">
+
+  <!-- Persistent sound toggle -->
+  <div class="quiz-topbar">
+    <button id="sound-toggle" class="sound-btn" type="button" aria-pressed="true" aria-label="Turn sound off" title="Sound">
+      <svg class="icon-on" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+      <svg class="icon-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      <span class="sound-label">Sound</span>
+    </button>
+  </div>
+
+  <!-- ============ INTRO ============ -->
+  <section id="quiz-intro" class="quiz-intro">
+    <div class="quiz-hero" id="quiz-hero">
+      <div class="gpu-anim" aria-hidden="true">
+        <svg class="gpu" viewBox="0 0 260 150" xmlns="http://www.w3.org/2000/svg" role="img">
+          <rect class="board" x="3" y="3" width="254" height="144" rx="12"/>
+          <rect class="mem" x="16" y="34" width="20" height="82" rx="3"/>
+          <rect class="mem" x="42" y="34" width="20" height="82" rx="3"/>
+          <rect class="mem" x="198" y="34" width="20" height="82" rx="3"/>
+          <rect class="mem" x="224" y="34" width="20" height="82" rx="3"/>
+          <rect class="die" x="86" y="28" width="88" height="94" rx="8"/>
+          <rect class="die-ring" x="92" y="34" width="76" height="82" rx="5"/>
+          <g class="cores">
+            {{- range $r := (seq 0 4) }}{{- range $c := (seq 0 4) }}
+            <rect class="core" x="{{ add 100 (mul $c 13) }}" y="{{ add 42 (mul $r 13) }}" width="9" height="9" rx="2" style="animation-delay: {{ mul (add $r $c) 0.12 }}s" />
+            {{- end }}{{- end }}
+          </g>
+        </svg>
+      </div>
+      <span class="quiz-badge">◆ Knowledge check</span>
+      <h1 class="quiz-title">Accelerate Your Model</h1>
+      <p class="quiz-sub">NVIDIA is the most valuable company in the world today. That is because they make GPUs, and GPUs are so important for modern AI: they run all the powerful AI applications like ChatGPT, Claude, and climate models.</p>
+      <p class="quiz-sub">This quiz will test your understanding of GPUs and help you strengthen it. Let's go.</p>
+
+      <div class="quiz-chips">
+        <span>📋 20 questions</span>
+        <span id="best-chip" hidden>🏆 Best: <strong>0%</strong></span>
+      </div>
+
+      <div class="quiz-hero-foot">
+        <button id="start-btn" class="btn-pill" type="button">
+          <span id="start-label">Start the quiz</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+        <div class="quiz-bar" role="img" aria-label="Your best score so far"><span id="best-bar"></span></div>
+      </div>
+    </div>
+    <p class="quiz-note" id="attempts-note" hidden></p>
+  </section>
+
+  <!-- ============ RUNNER ============ -->
+  <section id="quiz-run" hidden aria-live="polite">
+    <div class="quiz-progress" aria-hidden="true"><span id="progress-fill"></span></div>
+    <div class="quiz-meta">
+      <span id="q-counter">Question 1 of 20</span>
+      <span id="q-topic" class="q-topic"></span>
+    </div>
+    <div id="question-card" class="quiz-card"></div>
+    <div class="quiz-actions">
+      <button id="primary-btn" class="btn-press" type="button" hidden></button>
+    </div>
+  </section>
+
+  <!-- ============ RESULTS ============ -->
+  <section id="quiz-results" hidden>
+    <div class="results-head">
+      <p class="results-eyebrow">Your score</p>
+      <div class="score-num"><span id="score-pct">0%</span></div>
+      <p class="score-detail"><span id="score-raw">0 of 20</span> correct</p>
+      <div class="band" id="band"></div>
+      <p class="best-line" id="best-line"></p>
+    </div>
+
+    <h2 class="results-sub">How you did by topic</h2>
+    <div id="topic-breakdown" class="topic-breakdown"></div>
+
+    <div class="results-actions">
+      <button id="review-btn" class="btn-press" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+        Review your answers
+      </button>
+      <button id="retake-btn" class="btn-press secondary" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        Play again
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ REVIEW ============ -->
+  <section id="quiz-review" hidden>
+    <div class="review-bar">
+      <button id="rev-back" class="link-btn" type="button">‹ Back to results</button>
+      <span id="rev-counter" class="rev-counter"></span>
+    </div>
+    <div class="quiz-progress" aria-hidden="true"><span id="rev-progress"></span></div>
+    <div id="review-card" class="quiz-card"></div>
+    <div class="quiz-actions split">
+      <button id="rev-prev" class="btn-press secondary" type="button">‹ Previous</button>
+      <button id="rev-next" class="btn-press" type="button">Next ›</button>
+    </div>
+  </section>
+
+</article>
+
+<script>
+(function () {
+  "use strict";
+
+  var COURSE = "https://www.skills.google/paths/3135/course_templates/1555";
+  var TOPICS = {
+    basics:     "GPU Basics",
+    matmul:     "Matrix Multiplication",
+    flops:      "FLOPS",
+    params:     "Parameters, Training & Inference",
+    memory:     "Memory & Precision",
+    budget:     "Memory Budgeting",
+    bottleneck: "Bottlenecks & Optimisation"
+  };
+
+  // Every question is single-choice. Optional fields:
+  //   given  - a monospace block shown in the QUESTION (the data you are given)
+  //   calc   - a monospace working-out shown in the explanation
+  //   recall - a key fact shown as a "Recall" callout
+  var QUESTIONS = [
+    { topic:"basics", q:"What is a GPU?",
+      options:["A storage device for AI models","A processor with many specialised cores designed for highly parallel computations","A programming language","A computer monitor"],
+      correct:1,
+      explanation:"A GPU (Graphics Processing Unit) is a processor containing many specialised cores that can perform many computations simultaneously.",
+      recall:"A GPU has thousands of small cores built for doing many things at once, unlike a CPU's few powerful cores." },
+
+    { topic:"basics", q:"GPUs were originally designed for:",
+      options:["Training AI models","Rendering graphics in video games","Running databases","Storing large datasets"],
+      correct:1,
+      explanation:"GPUs were originally developed to render graphics efficiently. Their ability to perform many calculations in parallel later made them useful for AI." },
+
+    { topic:"basics", q:"Why are GPUs useful for modern AI?",
+      options:["They have larger storage drives","They perform matrix multiplications efficiently and in parallel","They make code easier to write","They use less internet bandwidth"],
+      correct:1,
+      explanation:"AI models spend much of their time performing matrix multiplications, and GPUs are designed to accelerate exactly these operations." },
+
+    { topic:"basics", q:"Which operation is often called the mathematical engine of modern AI?",
+      options:["Compression","Encryption","Matrix multiplication","Sorting"],
+      correct:2,
+      explanation:"Neural networks and transformers rely heavily on matrix multiplication to process information, so it does most of the heavy lifting.",
+      recall:"Matrix multiplication is the core operation, which is exactly what GPUs accelerate." },
+
+    { topic:"matmul", q:"What is the output shape of a 3×2 matrix multiplied by a 2×3 matrix?",
+      options:["2×2","2×3","3×2","3×3"],
+      correct:3,
+      explanation:"When you multiply matrices, the inner dimensions must match and they cancel out, leaving the outer dimensions as the result shape.",
+      calc:"(3×2) · (2×3)\n   \\____/\n   inner dims match (2 = 2), and disappear\n\noutput = outer dims = 3×3",
+      recall:"(a×b) · (b×c) = a×c. The shared inner dimension must match and then disappears." },
+
+    { topic:"matmul", q:"A (3×2) × (2×3) matrix multiplication takes 27 operations for this exercise. If you can perform 3 operations per second, how long will it take?",
+      options:["3 seconds","6 seconds","9 seconds","27 seconds"],
+      correct:2,
+      explanation:"Divide the total amount of work by how fast you can do it. The same idea scales up to real models: billions of operations divided by a GPU's operations per second.",
+      calc:"Time = Operations ÷ Operations per second\n     = 27 ÷ 3\n     = 9 seconds",
+      recall:"Time = total operations ÷ operations per second. The more a chip can do each second (higher FLOPS), the less time it takes." },
+
+    { topic:"flops", q:"What does FLOPS stand for?",
+      options:["Floating-Point Operations","Floating-Point Operations Per Second","Fast Learning Operations Per Second","Floating Language Operations Per Second"],
+      correct:1,
+      explanation:"FLOPS (capital S) means Floating-Point Operations Per Second: how fast a processor computes. Watch the difference from FLOPs (lowercase s), which means Floating-Point Operations, the total count of calculations rather than a speed. The S, for per Second, is what turns a count into a rate.",
+      recall:"FLOPS = operations per second (a speed). FLOPs = total operations (a count). The capital S is the per-Second part." },
+
+    { topic:"flops", q:"If a processor performs 100 operations every second, its performance is:",
+      options:["10 FLOPS","100 FLOPS","1,000 FLOPS","10,000 FLOPS"],
+      correct:1,
+      explanation:"FLOPS counts the operations completed per second, so 100 operations per second is simply 100 FLOPS." },
+
+    { topic:"params", q:"What are model parameters?",
+      options:["The training dataset","The numbers learned during training","The GPU cores","The prompts given to the model"],
+      correct:1,
+      explanation:"Parameters are the numerical values (the weights and biases) that a model learns during training. Model size is usually quoted as a parameter count, for example 1 billion parameters.",
+      recall:"Parameter count is how we measure model size, and it drives how much memory the model needs." },
+
+    { topic:"params", q:"Training a model primarily involves:",
+      options:["Learning model parameters","Downloading datasets","Increasing GPU memory","Compressing files"],
+      correct:0,
+      explanation:"Training repeatedly adjusts the model parameters to improve performance on a task, using the gradients produced by backpropagation." },
+
+    { topic:"params", q:"Inference primarily involves:",
+      options:["Updating model parameters","A forward pass through the model","Running gradient descent","Creating new training data"],
+      correct:1,
+      explanation:"Inference uses the already-learned parameters to make a prediction in a single forward pass, without changing them. That is why inference needs far less memory than training.",
+      recall:"Training = forward pass + backward pass + weight updates. Inference = forward pass only." },
+
+    { topic:"memory", q:"How much memory does one parameter require when stored as Float32?",
+      options:["1 byte","2 bytes","4 bytes","8 bytes"],
+      correct:2,
+      explanation:"Float32 uses 32 bits to store one number. Since 8 bits make 1 byte, that is 4 bytes per parameter.",
+      calc:"32 bits ÷ 8 bits per byte = 4 bytes",
+      recall:"bytes = bits ÷ 8. Float32 = 32 bits = 4 bytes." },
+
+    { topic:"memory", q:"Which option correctly matches number formats to memory usage?",
+      options:[
+        "Float32 = 4 bytes, bfloat16 = 2 bytes, int8 = 1 byte",
+        "Float32 = 8 bytes, bfloat16 = 4 bytes, int8 = 2 bytes",
+        "Float32 = 4 bytes, bfloat16 = 1 byte, int8 = 0.5 bytes",
+        "Float32 = 2 bytes, bfloat16 = 1 byte, int8 = 1 byte"
+      ],
+      correct:0,
+      explanation:"The number in each format name is its bit count. Divide by 8 to get bytes.",
+      calc:"Float32  : 32 ÷ 8 = 4 bytes\nbfloat16 : 16 ÷ 8 = 2 bytes\nint8     :  8 ÷ 8 = 1 byte",
+      recall:"The digits in the format name are bits, and bytes = bits ÷ 8." },
+
+    { topic:"memory", q:"Approximately how much memory is required to store a 1 billion parameter model in Float32?",
+      options:["1 GB","2 GB","4 GB","8 GB"],
+      correct:2,
+      explanation:"Multiply the parameter count by the bytes per parameter.",
+      calc:"1,000,000,000 params × 4 bytes ≈ 4 GB",
+      recall:"Model memory ≈ parameters × bytes per parameter." },
+
+    { topic:"memory", q:"Approximately how much memory is required to store a 1 billion parameter model in int8?",
+      options:["1 GB","2 GB","4 GB","8 GB"],
+      correct:0,
+      explanation:"At 1 byte per parameter, a billion parameters is about 1 GB. That is one quarter of the Float32 size, which is exactly why quantization saves so much memory.",
+      calc:"1,000,000,000 params × 1 byte ≈ 1 GB\n(Float32 was 4 GB, so int8 is 4× smaller)",
+      recall:"int8 uses one quarter of the memory of Float32." },
+
+    { topic:"budget", q:"You are training a 1 billion parameter model in Float32 with the Adam optimizer. Assume the activation memory is 4 GB. How much GPU memory does training need?",
+      options:["8 GB","12 GB","16 GB","20 GB"],
+      correct:3,
+      explanation:"Training has to hold four things in GPU memory at the same time: the parameters, the gradients, the optimizer states, and the activations. Add them all up.",
+      calc:"Parameters       = 1B × 4 bytes = 4 GB\nGradients        = 1 × params    = 4 GB\nOptimizer states = 2 × params    = 8 GB\nActivations      =                4 GB\n---------------------------------------\nTotal            = 4 + 4 + 8 + 4 = 20 GB",
+      recall:"Gradients = 1 × parameter memory.\nOptimizer states = 2 × parameter memory (Adam stores two values per parameter).\nSo training memory = parameters + gradients + optimizer states + activations, which is several times the raw model size." },
+
+    { topic:"budget", q:"Using the same 1 billion parameter Float32 model, how much memory does inference need? Assume no gradients, no optimizer states, and negligible activation memory.",
+      options:["4 GB","8 GB","12 GB","20 GB"],
+      correct:0,
+      explanation:"Inference only needs the parameters loaded, so the memory is just the model size. This is why a model can be served on far smaller hardware than it was trained on.",
+      calc:"1B × 4 bytes = 4 GB (parameters only)",
+      recall:"Inference memory ≈ model size. Training memory ≈ several × model size." },
+
+    { topic:"bottleneck", q:"GPU utilisation is close to 100%, but training is still slow. What is the most likely bottleneck?",
+      options:["Compute-bound","Memory-bound","Data pipeline-bound","Storage-bound"],
+      correct:0,
+      explanation:"If the compute cores are already fully busy, the calculations themselves are the limit. You need more or faster compute, or fewer operations: a smaller model, mixed precision, or more efficient attention.",
+      recall:"Compute near 100% and still slow means compute-bound: the maths is the limit." },
+
+    { topic:"bottleneck", q:"GPU memory usage is close to 100%, and Out-of-Memory errors occur frequently. What is the most likely bottleneck?",
+      options:["Compute-bound","Memory-bound","Data pipeline-bound","Network-bound"],
+      correct:1,
+      explanation:"When VRAM is full and you hit Out-of-Memory errors, memory is the limit: the model, activations, or batch size no longer fit. Fixes include a smaller batch, quantization, gradient accumulation, or gradient checkpointing.",
+      recall:"VRAM full or frequent OOM means memory-bound: it does not fit." },
+
+    { topic:"bottleneck", q:"A model is too large to fit into GPU memory during inference. Which technique should you try first?",
+      options:["Quantization","Mixed-precision training","Gradient accumulation","LoRA"],
+      correct:0,
+      explanation:"Quantization stores parameters in a lower-precision format (such as int8 instead of Float32), cutting memory use so a larger model fits. Mixed-precision training, gradient accumulation, and LoRA are all training techniques, so they do not help a pure inference memory problem.",
+      recall:"To fit a model in less memory for inference, quantize it: lower precision means fewer bytes per parameter." }
+  ];
+
+  var TOTAL = QUESTIONS.length;
+  var STORE_KEY = "arf.accelerate.v1";
+  var SOUND_KEY = "arf.quiz.sound";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var intro = $("quiz-intro"), run = $("quiz-run"), results = $("quiz-results"), review = $("quiz-review");
+  var qCard = $("question-card"), counter = $("q-counter"), topicEl = $("q-topic");
+  var progressFill = $("progress-fill");
+  var primaryBtn = $("primary-btn");
+  var soundToggle = $("sound-toggle");
+
+  var idx = 0, responses = [], score = 0, locked = false, primaryMode = null, reviewIdx = 0;
+
+  // ---------- storage ----------
+  function loadStats() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { return {}; } }
+  function saveStats(s) { try { localStorage.setItem(STORE_KEY, JSON.stringify(s)); } catch (e) {} }
+  function loadSound() { try { var v = localStorage.getItem(SOUND_KEY); return v === null ? true : v === "on"; } catch (e) { return true; } }
+  function saveSound(on) { try { localStorage.setItem(SOUND_KEY, on ? "on" : "off"); } catch (e) {} }
+
+  // ---------- sound ----------
+  var soundOn = loadSound();
+  var actx = null, audioReady = false;
+  function ensureAudio() { if (actx) return; try { var AC = window.AudioContext || window.webkitAudioContext; if (AC) actx = new AC(); } catch (e) { actx = null; } }
+  function unlockAudio() {
+    ensureAudio(); if (!actx) return;
+    if (actx.state === "suspended") actx.resume();
+    if (!audioReady) { audioReady = true; try { var b = actx.createBuffer(1, 1, 22050), s = actx.createBufferSource(); s.buffer = b; s.connect(actx.destination); s.start(0); } catch (e) {} }
+  }
+  ["pointerdown", "touchend", "click"].forEach(function (ev) { document.addEventListener(ev, unlockAudio, { passive: true }); });
+  function tone(freq, start, dur, type, vol) {
+    if (!actx) return;
+    var o = actx.createOscillator(), g = actx.createGain();
+    o.type = type || "sine"; o.frequency.value = freq;
+    var t0 = actx.currentTime + start;
+    g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(vol || 0.18, t0 + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(actx.destination); o.start(t0); o.stop(t0 + dur + 0.02);
+  }
+  function sfx(name) {
+    if (!soundOn || !actx) return;
+    if (actx.state === "suspended") actx.resume();
+    if (name === "correct") { tone(587.33, 0, 0.14, "sine", 0.18); tone(880, 0.1, 0.22, "sine", 0.18); }
+    else if (name === "wrong") { tone(196, 0, 0.16, "sawtooth", 0.12); tone(155.56, 0.12, 0.24, "sawtooth", 0.10); }
+    else if (name === "tick") { tone(420, 0, 0.05, "triangle", 0.06); }
+    else if (name === "finish") { tone(523.25, 0, 0.12, "sine", 0.16); tone(659.25, 0.12, 0.12, "sine", 0.16); tone(783.99, 0.24, 0.12, "sine", 0.16); tone(1046.5, 0.36, 0.3, "sine", 0.18); }
+  }
+  function reflectSound() {
+    soundToggle.setAttribute("aria-pressed", soundOn ? "true" : "false");
+    soundToggle.setAttribute("aria-label", soundOn ? "Turn sound off" : "Turn sound on");
+    soundToggle.classList.toggle("is-off", !soundOn);
+  }
+  soundToggle.addEventListener("click", function () { soundOn = !soundOn; saveSound(soundOn); reflectSound(); if (soundOn) { ensureAudio(); sfx("tick"); } });
+  reflectSound();
+
+  // ---------- helpers ----------
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function letter(i) { return ["A", "B", "C", "D", "E"][i]; }
+  function reviewLink() { return '<a class="topic-review" href="' + COURSE + '" target="_blank" rel="noopener">Review: Course 07, Accelerate Your Model &rsaquo;</a>'; }
+
+  function feedbackHTML(qd, isCorrect) {
+    var h = '<p class="fb-head">' + (isCorrect ? "✓ Correct" : "✗ Not quite") + '</p>';
+    h += '<p class="fb-body">' + esc(qd.explanation) + '</p>';
+    if (qd.calc) h += '<pre class="quiz-calc"><code>' + esc(qd.calc) + '</code></pre>';
+    if (qd.recall) h += '<div class="quiz-recall"><span class="recall-label">Recall</span>' + esc(qd.recall) + '</div>';
+    return h;
+  }
+
+  // ---------- intro ----------
+  function renderIntro() {
+    var s = loadStats(), best = s.best || 0;
+    var bestBar = $("best-bar"), note = $("attempts-note"), chip = $("best-chip");
+    if (s.attempts) {
+      chip.hidden = false; chip.querySelector("strong").textContent = best + "%";
+      note.hidden = false; note.textContent = "You have taken this " + s.attempts + (s.attempts === 1 ? " time" : " times") + ". Last score: " + (s.last || 0) + "%.";
+      $("start-label").textContent = "Play again";
+    }
+    bestBar.style.width = best + "%";
+  }
+
+  // ---------- runner ----------
+  function setPrimary(mode, label) { primaryMode = mode; primaryBtn.hidden = false; primaryBtn.textContent = label; }
+
+  function renderQuestion() {
+    locked = false;
+    var qd = QUESTIONS[idx];
+    counter.textContent = "Question " + (idx + 1) + " of " + TOTAL;
+    topicEl.textContent = TOPICS[qd.topic];
+    progressFill.style.width = (idx / TOTAL * 100) + "%";
+    qCard.innerHTML = questionHTML(qd);
+    var btns = qCard.querySelectorAll(".opt");
+    for (var b = 0; b < btns.length; b++) btns[b].addEventListener("click", onOptionClick);
+    primaryBtn.hidden = true; primaryMode = null;
+    qCard.classList.remove("card-in"); void qCard.offsetWidth; qCard.classList.add("card-in");
+  }
+
+  function questionHTML(qd) {
+    var html = '<p class="q-type">Choose one</p>';
+    html += '<p class="q-text">' + esc(qd.q) + '</p>';
+    html += '<div class="quiz-options" role="group">';
+    for (var i = 0; i < qd.options.length; i++) html += optBtn(i, qd.options[i]);
+    html += '</div><div class="quiz-feedback" id="feedback" hidden></div>';
+    return html;
+  }
+  function optBtn(i, label) {
+    return '<button class="opt" type="button" data-i="' + i + '" aria-pressed="false"><span class="opt-mark" aria-hidden="true">' + letter(i) + '</span><span class="opt-text">' + esc(label) + '</span></button>';
+  }
+
+  function onOptionClick(e) { if (locked) return; lockSingle(parseInt(e.currentTarget.getAttribute("data-i"), 10)); }
+
+  function lockSingle(chosen) {
+    locked = true;
+    var qd = QUESTIONS[idx], correctIdx = qd.correct, isCorrect = chosen === correctIdx;
+    responses[idx] = { isCorrect: isCorrect, chosen: chosen };
+    if (isCorrect) score++;
+    var btns = qCard.querySelectorAll(".opt");
+    for (var i = 0; i < btns.length; i++) {
+      var bi = parseInt(btns[i].getAttribute("data-i"), 10);
+      btns[i].disabled = true;
+      if (bi === correctIdx) btns[i].classList.add("correct");
+      else if (bi === chosen) btns[i].classList.add("wrong");
+    }
+    var fb = $("feedback");
+    fb.hidden = false; fb.className = "quiz-feedback " + (isCorrect ? "ok" : "no");
+    fb.innerHTML = feedbackHTML(qd, isCorrect);
+    sfx(isCorrect ? "correct" : "wrong");
+    progressFill.style.width = ((idx + 1) / TOTAL * 100) + "%";
+    setPrimary("next", idx === TOTAL - 1 ? "See results" : "Next");
+    primaryBtn.focus();
+  }
+
+  primaryBtn.addEventListener("click", function () {
+    if (primaryMode !== "next") return;
+    sfx("tick");
+    if (idx === TOTAL - 1) { finish(); return; }
+    idx++; renderQuestion();
+    run.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  // ---------- results ----------
+  function bandFor(pct) {
+    if (pct >= 85) return { key: "ready",   emoji: "🚀", title: "GPU guru",          msg: "Strong grip on compute and memory. Skim anything you missed." };
+    if (pct >= 60) return { key: "almost",  emoji: "💪", title: "Solid grasp",       msg: "Good understanding. Revisit the topics flagged below." };
+    return            { key: "refresh", emoji: "📚", title: "Worth another pass", msg: "No worries. Replay the quiz and review the topics below to lock it in." };
+  }
+
+  function finish() {
+    var pct = Math.round(score / TOTAL * 100);
+    var s = loadStats(), prevAttempts = s.attempts || 0, prevBest = (typeof s.best === "number") ? s.best : 0;
+    s.attempts = prevAttempts + 1; s.last = pct; s.best = Math.max(prevBest, pct); saveStats(s);
+
+    var band = bandFor(pct);
+    $("band").className = "band band-" + band.key;
+    $("band").innerHTML = '<span class="band-emoji">' + band.emoji + '</span><span class="band-title">' + band.title + '</span><span class="band-msg">' + band.msg + '</span>';
+    $("score-raw").textContent = score + " of " + TOTAL;
+
+    var bestLine;
+    if (prevAttempts === 0) bestLine = "Your first attempt. Run it again to beat it.";
+    else if (pct > prevBest) bestLine = "New personal best, up from " + prevBest + "%.";
+    else if (pct === prevBest) bestLine = "You matched your best of " + s.best + "%.";
+    else bestLine = "Your best so far is " + s.best + "%. Attempt " + s.attempts + ".";
+    $("best-line").textContent = bestLine;
+
+    var tally = {};
+    for (var i = 0; i < QUESTIONS.length; i++) {
+      var k = QUESTIONS[i].topic;
+      if (!tally[k]) tally[k] = { c: 0, n: 0 };
+      tally[k].n++; if (responses[i] && responses[i].isCorrect) tally[k].c++;
+    }
+    var tb = "";
+    for (var key in TOPICS) {
+      if (!tally[key]) continue;
+      var t = tally[key], p = Math.round(t.c / t.n * 100), weak = p < 100;
+      tb += '<div class="topic-row"><div class="topic-line"><span class="topic-name">' + esc(TOPICS[key]) + '</span><span class="topic-score">' + t.c + "/" + t.n + '</span></div>' +
+        '<div class="topic-bar"><span style="width:' + p + '%"></span></div>' +
+        (weak ? reviewLink() : '<span class="topic-done">Nailed it ✓</span>') + '</div>';
+    }
+    $("topic-breakdown").innerHTML = tb;
+
+    run.hidden = true; review.hidden = true; results.hidden = false;
+    sfx("finish"); animateScore(pct);
+    results.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function animateScore(target) {
+    var el = $("score-pct");
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) { el.textContent = target + "%"; return; }
+    var cur = 0, step = Math.max(1, Math.round(target / 30));
+    var timer = setInterval(function () { cur += step; if (cur >= target) { cur = target; clearInterval(timer); } el.textContent = cur + "%"; }, 24);
+  }
+
+  // ---------- review ----------
+  function enterReview() {
+    reviewIdx = 0; results.hidden = true; run.hidden = true; intro.hidden = true; review.hidden = false;
+    renderReview(); review.scrollIntoView({ behavior: "smooth", block: "start" }); sfx("tick");
+  }
+  function renderReview() {
+    var qd = QUESTIONS[reviewIdx], r = responses[reviewIdx] || {};
+    $("rev-counter").textContent = "Reviewing " + (reviewIdx + 1) + " of " + TOTAL + " · " + TOPICS[qd.topic];
+    $("rev-progress").style.width = ((reviewIdx + 1) / TOTAL * 100) + "%";
+    var html = '<div class="rev-status ' + (r.isCorrect ? "ok" : "no") + '">' + (r.isCorrect ? "✓ You got this right" : "✗ You missed this one") + '</div>';
+    html += '<p class="q-type">Choose one</p><p class="q-text">' + esc(qd.q) + '</p>';
+    html += '<div class="quiz-options">';
+    for (var j = 0; j < qd.options.length; j++) {
+      var c2 = "", tag2 = "";
+      if (j === qd.correct) { c2 = "correct"; tag2 = (j === r.chosen) ? "Your answer ✓" : "Correct answer"; }
+      else if (j === r.chosen) { c2 = "wrong"; tag2 = "Your answer ✗"; }
+      html += revOpt(j, qd.options[j], c2, tag2);
+    }
+    html += '</div>';
+    html += '<div class="quiz-feedback ' + (r.isCorrect ? "ok" : "no") + '">' + feedbackHTML(qd, r.isCorrect) + reviewLink() + '</div>';
+    var rc = $("review-card");
+    rc.innerHTML = html; rc.classList.remove("card-in"); void rc.offsetWidth; rc.classList.add("card-in");
+    $("rev-prev").disabled = reviewIdx === 0;
+    $("rev-next").textContent = reviewIdx === TOTAL - 1 ? "Back to results" : "Next ›";
+  }
+  function revOpt(i, label, cls, tag) {
+    return '<div class="opt ' + cls + '" aria-disabled="true"><span class="opt-mark" aria-hidden="true">' + letter(i) + '</span><span class="opt-text">' + esc(label) + (tag ? ' <span class="opt-tag">' + esc(tag) + '</span>' : "") + '</span></div>';
+  }
+  $("rev-prev").addEventListener("click", function () { if (reviewIdx > 0) { reviewIdx--; sfx("tick"); renderReview(); review.scrollIntoView({ behavior: "smooth", block: "start" }); } });
+  $("rev-next").addEventListener("click", function () { sfx("tick"); if (reviewIdx === TOTAL - 1) { backToResults(); return; } reviewIdx++; renderReview(); review.scrollIntoView({ behavior: "smooth", block: "start" }); });
+  $("rev-back").addEventListener("click", backToResults);
+  function backToResults() { review.hidden = true; results.hidden = false; results.scrollIntoView({ behavior: "smooth", block: "start" }); }
+
+  // ---------- start / retake ----------
+  function startQuiz() {
+    ensureAudio(); if (soundOn && actx && actx.state === "suspended") actx.resume();
+    idx = 0; score = 0; responses = []; locked = false;
+    intro.hidden = true; results.hidden = true; review.hidden = true; run.hidden = false;
+    renderQuestion(); run.scrollIntoView({ behavior: "smooth", block: "start" }); sfx("tick");
+  }
+  $("start-btn").addEventListener("click", startQuiz);
+  $("retake-btn").addEventListener("click", startQuiz);
+  $("review-btn").addEventListener("click", enterReview);
+
+  renderIntro();
+})();
+</script>
+{{ end }}

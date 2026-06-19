@@ -1842,6 +1842,9 @@ section { padding: 3rem 0; }
 }
 .recall-label { display: block; font-size: .66rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 800; color: #8a6d00; margin-bottom: .25rem; }
 
+/* Land scrolls below the sticky header so the full question is visible */
+#quiz-run, #quiz-results, #quiz-review { scroll-margin-top: 88px; }
+
 /* ---------- Accelerate quiz: animated GPU chip on the intro ---------- */
 .gpu-anim { display: flex; justify-content: center; margin: 0 0 1.3rem; }
 .gpu { width: clamp(170px, 42vw, 240px); height: auto; filter: drop-shadow(0 12px 26px rgba(0,0,0,.35)); }

@@ -35,7 +35,7 @@
       <p class="quiz-sub">This quiz will test your understanding of GPUs and help you strengthen it. Let's go.</p>
 
       <div class="quiz-chips">
-        <span>📋 20 questions</span>
+        <span>📋 23 questions</span>
         <span id="best-chip" hidden>🏆 Best: <strong>0%</strong></span>
       </div>
 
@@ -116,11 +116,12 @@
     params:     "Parameters, Training & Inference",
     memory:     "Memory & Precision",
     budget:     "Memory Budgeting",
-    bottleneck: "Bottlenecks & Optimisation"
+    bottleneck: "Bottlenecks & Optimisation",
+    ri:         "Responsible Innovation"
   };
 
-  // Every question is single-choice. Optional fields:
-  //   given  - a monospace block shown in the QUESTION (the data you are given)
+  // Questions are single-choice by default. Set multi:true with correct as an
+  // array of indices for "select all that apply". Optional fields:
   //   calc   - a monospace working-out shown in the explanation
   //   recall - a key fact shown as a "Recall" callout
   var QUESTIONS = [
@@ -235,6 +236,18 @@
       calc:"1B × 4 bytes = 4 GB (parameters only)",
       recall:"Inference memory ≈ model size. Training memory ≈ several × model size." },
 
+    { topic:"budget", multi:true, q:"Select everything that must be held in GPU memory during TRAINING.",
+      options:["Activations","Gradients","Parameters","Optimizer states"],
+      correct:[0,1,2,3],
+      explanation:"Training needs all four at the same time. The parameters are the model itself. The forward pass produces activations, which must be kept so the backward pass can use them. The backward pass produces gradients, one per parameter. The optimizer (such as Adam) keeps its own states to update each parameter. That is why training memory is several times the raw model size.",
+      recall:"Training memory = parameters + gradients + optimizer states + activations. All four live in GPU memory together." },
+
+    { topic:"budget", multi:true, q:"Select everything that must be held in GPU memory during INFERENCE.",
+      options:["Activations","Gradients","Parameters","Optimizer states"],
+      correct:[2],
+      explanation:"Inference is just the forward pass, so you only need the parameters loaded. There is no backward pass, so there are no gradients and no optimizer states to store. Activations are still produced as the input flows through, but they are tiny and transient (nothing has to save them for a backward pass), so we treat inference memory as essentially the model size.",
+      recall:"Inference needs only the parameters. Dropping gradients and optimizer states is exactly why a model serves on far smaller hardware than it trained on." },
+
     { topic:"bottleneck", q:"GPU utilisation is close to 100%, but training is still slow. What is the most likely bottleneck?",
       options:["Compute-bound","Memory-bound","Data pipeline-bound","Storage-bound"],
       correct:0,
@@ -251,7 +264,18 @@
       options:["Quantization","Mixed-precision training","Gradient accumulation","LoRA"],
       correct:0,
       explanation:"Quantization stores parameters in a lower-precision format (such as int8 instead of Float32), cutting memory use so a larger model fits. Mixed-precision training, gradient accumulation, and LoRA are all training techniques, so they do not help a pure inference memory problem.",
-      recall:"To fit a model in less memory for inference, quantize it: lower precision means fewer bytes per parameter." }
+      recall:"To fit a model in less memory for inference, quantize it: lower precision means fewer bytes per parameter." },
+
+    { topic:"ri", q:"Training and serving large models on GPUs consumes real energy, water for cooling, and scarce minerals, and that hardware is not equally available to everyone. From a responsible innovation standpoint, what is the best way to think about scaling up compute?",
+      options:[
+        "Match the model and hardware to the actual task, use the most efficient option that works, and weigh whether the expected benefit justifies the resource cost",
+        "Always reach for the largest model and the most GPUs available, because bigger is always better",
+        "Treat energy and water use as the data centre's concern, not something a researcher needs to consider",
+        "Run the GPUs at full power at all times to get results as fast as possible, whatever the cost"
+      ],
+      correct:0,
+      explanation:"Responsible innovation does not mean never using large models. It means being deliberate: pick the right-sized, most efficient approach for the problem, and weigh the benefits against the real environmental and social costs, including who can and cannot access this compute. The other options either ignore those costs, assume bigger is automatically better, or treat the impact as someone else's problem.",
+      recall:"Responsible compute = anticipate the impacts (energy, water, minerals, unequal access) and choose the most efficient approach that fits the task, not the biggest one by default." }
   ];
 
   var TOTAL = QUESTIONS.length;
@@ -344,12 +368,13 @@
     qCard.innerHTML = questionHTML(qd);
     var btns = qCard.querySelectorAll(".opt");
     for (var b = 0; b < btns.length; b++) btns[b].addEventListener("click", onOptionClick);
-    primaryBtn.hidden = true; primaryMode = null;
+    if (qd.multi) { setPrimary("submit", "Submit answer"); primaryBtn.disabled = true; }
+    else { primaryBtn.hidden = true; primaryMode = null; }
     qCard.classList.remove("card-in"); void qCard.offsetWidth; qCard.classList.add("card-in");
   }
 
   function questionHTML(qd) {
-    var html = '<p class="q-type">Choose one</p>';
+    var html = '<p class="q-type">' + (qd.multi ? "Select all that apply" : "Choose one") + '</p>';
     html += '<p class="q-text">' + esc(qd.q) + '</p>';
     html += '<div class="quiz-options" role="group">';
     for (var i = 0; i < qd.options.length; i++) html += optBtn(i, qd.options[i]);
@@ -360,7 +385,19 @@
     return '<button class="opt" type="button" data-i="' + i + '" aria-pressed="false"><span class="opt-mark" aria-hidden="true">' + letter(i) + '</span><span class="opt-text">' + esc(label) + '</span></button>';
   }
 
-  function onOptionClick(e) { if (locked) return; lockSingle(parseInt(e.currentTarget.getAttribute("data-i"), 10)); }
+  function onOptionClick(e) {
+    if (locked) return;
+    var qd = QUESTIONS[idx], btn = e.currentTarget;
+    if (qd.multi) {
+      var pressed = btn.getAttribute("aria-pressed") === "true";
+      btn.setAttribute("aria-pressed", pressed ? "false" : "true");
+      btn.classList.toggle("selected", !pressed);
+      primaryBtn.disabled = !qCard.querySelector('.opt[aria-pressed="true"]');
+      sfx("tick");
+    } else {
+      lockSingle(parseInt(btn.getAttribute("data-i"), 10));
+    }
+  }
 
   function lockSingle(chosen) {
     locked = true;
@@ -384,7 +421,35 @@
     fb.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
+  function lockMulti() {
+    locked = true;
+    var qd = QUESTIONS[idx], btns = qCard.querySelectorAll(".opt");
+    var chosen = [], isCorrect = true;
+    for (var i = 0; i < btns.length; i++) {
+      var picked = btns[i].getAttribute("aria-pressed") === "true";
+      var shouldPick = qd.correct.indexOf(i) !== -1;
+      if (picked) chosen.push(i);
+      if (picked !== shouldPick) isCorrect = false;
+      btns[i].disabled = true; btns[i].classList.remove("selected");
+      if (shouldPick && picked) btns[i].classList.add("correct");
+      else if (!shouldPick && picked) btns[i].classList.add("wrong");
+      else if (shouldPick && !picked) btns[i].classList.add("missed");
+    }
+    responses[idx] = { isCorrect: isCorrect, chosen: chosen };
+    if (isCorrect) score++;
+    var fb = $("feedback");
+    fb.hidden = false; fb.className = "quiz-feedback " + (isCorrect ? "ok" : "no");
+    fb.innerHTML = feedbackHTML(qd, isCorrect);
+    sfx(isCorrect ? "correct" : "wrong");
+    progressFill.style.width = ((idx + 1) / TOTAL * 100) + "%";
+    setPrimary("next", idx === TOTAL - 1 ? "See results" : "Next");
+    primaryBtn.disabled = false;
+    primaryBtn.focus({ preventScroll: true });
+    fb.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
   primaryBtn.addEventListener("click", function () {
+    if (primaryMode === "submit") { sfx("tick"); lockMulti(); return; }
     if (primaryMode !== "next") return;
     sfx("tick");
     if (idx === TOTAL - 1) { finish(); return; }
@@ -454,12 +519,20 @@
     $("rev-counter").textContent = "Reviewing " + (reviewIdx + 1) + " of " + TOTAL + " · " + TOPICS[qd.topic];
     $("rev-progress").style.width = ((reviewIdx + 1) / TOTAL * 100) + "%";
     var html = '<div class="rev-status ' + (r.isCorrect ? "ok" : "no") + '">' + (r.isCorrect ? "✓ You got this right" : "✗ You missed this one") + '</div>';
-    html += '<p class="q-type">Choose one</p><p class="q-text">' + esc(qd.q) + '</p>';
+    html += '<p class="q-type">' + (qd.multi ? "Select all that apply" : "Choose one") + '</p><p class="q-text">' + esc(qd.q) + '</p>';
     html += '<div class="quiz-options">';
     for (var j = 0; j < qd.options.length; j++) {
       var c2 = "", tag2 = "";
-      if (j === qd.correct) { c2 = "correct"; tag2 = (j === r.chosen) ? "Your answer ✓" : "Correct answer"; }
-      else if (j === r.chosen) { c2 = "wrong"; tag2 = "Your answer ✗"; }
+      if (qd.multi) {
+        var shouldPick = qd.correct.indexOf(j) !== -1;
+        var didPick = (r.chosen || []).indexOf(j) !== -1;
+        if (shouldPick && didPick) { c2 = "correct"; tag2 = "Your answer ✓"; }
+        else if (shouldPick && !didPick) { c2 = "missed"; tag2 = "Missed"; }
+        else if (!shouldPick && didPick) { c2 = "wrong"; tag2 = "Your answer ✗"; }
+      } else {
+        if (j === qd.correct) { c2 = "correct"; tag2 = (j === r.chosen) ? "Your answer ✓" : "Correct answer"; }
+        else if (j === r.chosen) { c2 = "wrong"; tag2 = "Your answer ✗"; }
+      }
       html += revOpt(j, qd.options[j], c2, tag2);
     }
     html += '</div>';

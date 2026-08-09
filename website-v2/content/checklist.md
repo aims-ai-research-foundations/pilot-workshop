@@ -5,7 +5,7 @@ deadline: "15 June 2026"
 preArrival:
   - 'Set up your account on <a class="gs-link" href="https://www.skills.google/paths/3135" target="_blank" rel="noopener">Google Skills</a>.'
   - "Complete the first four courses (Courses 01–04)."
-  - 'Join the <a class="text-link" href="https://discord.com/invite/B7VbbMAdgg" target="_blank" rel="noopener">Discord</a> communication channel.'
+  - 'Join the <a class="text-link" href="https://discord.gg/awUQHVfRJD" target="_blank" rel="noopener">Discord</a> communication channel.'
 bring:
   - "Laptop and charger"
   - "South African power adaptor"
